@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="stylesheet-for-login.css">
+</head>
+<body>
+    <div id="login-box">
+        <div class="inputs-container">
+            <img src="../SOEN 287 Project/Images/UniversityLogo.png" alt="Logo" class="box-image">
+            <div class="personal-info">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="username@live.concordia.ca">
+            </div>
+            <div class="personal-info">
+                <label for="studentID">Student ID:</label>
+                <input type="text" id="studentID" name="studentID">
+            </div>
+            <div class="personal-info">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div id="user-admin">
+                <label for="admin-login">Log in as:</label>
+                <select id="admin-login" name="admin-login">
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div id="remember-me-button">
+                <label for="remember-me">Remember me next time</label>
+                <input type="checkbox" id="remember-me">
+            </div>
+            <div class="access-cancel-button">
+                <button id="log-in-button">Log In</button>
+                <button id="cancel-button">Cancel</button>
+            </div>
+            <p>
+                Don't have an account yet? <a href="sign-up.html">Create one!</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
