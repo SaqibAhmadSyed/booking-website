@@ -57,12 +57,7 @@
 - Modify or cancel bookings.
 - Automatically detect and prevent double-booking.
 
-#### 5. User Management
-- View all registered users (students and faculty).
-- Access user booking history for audit purposes.
-- Suspend or deactivate user accounts if necessary.
-
-#### 6. Reporting & Analytics
+#### 5. Reporting & Analytics
 - View usage statistics such as:
   - Most popular resources
   - Peak booking hours

@@ -1,0 +1,158 @@
+/* === GLOBAL STYLING === */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f6f6f6;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* === HEADER === */
+header {
+  background-color: #7A0019; /* Concordia Maroon */
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem 0 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+header p {
+  font-size: 1rem;
+  margin-top: 0.3rem;
+  opacity: 0.9;
+}
+
+.bookings th{
+  font-weight: 700;
+  font-family: 'Open Sans Condensed Bold', 'Arial Narrow', Arial, sans-serif;
+}
+
+#bookingTable th:hover {
+  text-decoration: underline white ;
+}
+
+/* === FILTER BAR === */
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.filters input,
+.filters select {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #7A0019;
+  outline: none;
+  box-shadow: 0 0 3px rgba(122, 0, 25, 0.3);
+}
+
+/* === TABLE SECTION === */
+table {
+  width: 90%;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+thead {
+  background-color: #7A0019;
+  color: #ffffff;
+}
+
+th, td {
+  padding: 0.9rem 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+th:hover {
+  background-color: #960022;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+
+/* === STATUS COLORS === */
+.status.pending {
+  color: #c69214; /* Concordia gold tone */
+  font-weight: 600;
+}
+
+.status.approved {
+  color: #2e7d32; /* Deep green */
+  font-weight: 600;
+}
+
+.status.rejected {
+  color: #c62828; /* Muted red */
+  font-weight: 600;
+}
+
+/* === BUTTONS === */
+button {
+  border: none;
+  padding: 0.45rem 0.8rem;
+  margin: 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+button.approve { background: #2e7d32; color: #fff; }
+button.reject { background: #c62828; color: #fff; }
+button.edit { background: #1565c0; color: #fff; }
+button.delete { background: #555; color: #fff; }
+
+button:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* === FOOTER === */
+footer {
+  text-align: center;
+  background-color: #7A0019;
+  color: #fff;
+  padding: 1rem;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  letter-spacing: 0.3px;
+}
+
+/* === TABLE BLOCK COLORS (Optional like your image) === */
+.cell-blue { background-color: #cbe4ff; }   /* pastel blue */
+.cell-red { background-color: #ffd6d6; }    /* pastel red */
+.cell-green { background-color: #d9f5d1; }  /* pastel green */
