@@ -68,6 +68,32 @@ body{
     border-color: #000000;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+.personal-info input[type="tel"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="tel"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.personal-info input[type="date"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="date"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 .personal-info input[type="password"]{
     width: 100%;
     padding: 5px;
@@ -125,19 +151,19 @@ body{
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 .access-cancel-button{
-    width: 100%;
     display: flex;
     align-items: center;
     gap: 30px;
     margin-top: 18px;
+    justify-content: center;
 }
 .access-cancel-button button{
-    font-size: 20px;
+    font-size: 23px;
     border: none;
     background-color: #912338;
     padding: 5px 10px;
-    width: 130px;
-    height: 40px;
+    width: 250px;
+    height: 47px;
     color: white;
     border-radius: 5px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
@@ -145,13 +171,12 @@ body{
     transition: all 0.1s ease;
 }
 .access-cancel-button button:hover{
-    width: 133px;
-    height: 42px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 .inputs-container p{
     font-size: 14px;
     margin-top: 30px;
+    text-align: center;
 }
 
 
