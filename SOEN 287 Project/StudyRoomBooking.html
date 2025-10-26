@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Study Room Booking</title>
     <link href="StudentStyle.css" rel="stylesheet">
+    <link href="../user-interface/user-stylesheet.css" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -16,7 +17,7 @@
             <form method="get">
                 <input type="button" id="MyBookingsBtn" value="My Bookings", onclick="location.href='MyBookings.html'">
             </form>
-            <a href ="AccountPage.html"/>
+            <a href="#" onclick="getEditProfileForm()"/>
             <img src="Images/AccountIcon.png",alt="My Account", id="AccountIcon">
             </a>
         </div>
@@ -162,5 +163,8 @@
         Labs can be booked for <b>5 hours</b> maximum.</br>
         Sports equipment and facility can be booked for <b>2 hours</b> maximum.</p>
     </footer>
+    <div id="edit-profile-container" style="display: none"></div>
+    <script src="../user-interface/edit-profile-form.js"></script>
+    <div id="edit-profile-overlay" style="display:none"></div>
 </body>
 </html>
