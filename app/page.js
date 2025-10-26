@@ -89,7 +89,7 @@ export default function Home() {
 
             <p className="text-sm text-center mt-2">
               Don&apos;t have an account yet?{" "}
-              <a href="sign-up.html" className="text-blue-600 underline">
+              <a href="signup" className="text-blue-600 underline">
                 Create one!
               </a>
             </p>
