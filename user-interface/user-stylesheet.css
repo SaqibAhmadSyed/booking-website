@@ -1,0 +1,178 @@
+
+#profile-container h2{
+    text-align: center;
+    font-size: 26px;
+}
+#close-button{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    font-weight: bold;
+    color: #912338;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+    z-index: 1001;
+}
+.profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+.profile-picture button {
+    width: 125px;
+    height: 30px;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #912338;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease;
+}
+.profile-picture button:hover{
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-profile-form label {
+    font-size: 16px;
+}
+
+.edit-profile-form button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-profile-form button:hover {
+    background-color: #0056b3;
+}
+
+#reservations-section {
+    text-align: right;
+    margin-top: 25px;
+}
+.personal-info input[type="email"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="email"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.personal-info input[type="tel"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="tel"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.personal-info input[type="date"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="date"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.personal-info input[type="password"]{
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px #3e3e3e solid;
+}
+.personal-info input[type="password"]:focus{
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+#submit-button button {
+    width: 125px;
+    height: 30px;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #912338;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease;
+}
+#submit-button button:hover{
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+.saved-message{
+    margin-top: 5px;
+    color: #11af11;
+    font-size: 14px;
+    opacity: 0;
+}
+.saved-message.show{
+    opacity: 1;
+}
+.personal-info{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.personal-info label{
+    font-size: 16px;
+}
+#reservations-section button {
+    width: 140px;
+    height: 33px;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #912338;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease;
+}
+#reservations-section button:hover{
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
