@@ -1,12 +1,7 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const [role, setRole] = useState("student");
-  const router = useRouter();
-
+export default function signup() {
   return (
       <main className="min-h-screen bg-slate-100 grid grid-cols-3 place-items-center text-black font-roboto text-[15px] font-normal">
         <div
@@ -81,7 +76,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => router.push(role === "admin" ? "/admin" : "/student")}
-                className="bg-red-900 text-white text-lg rounded-md px-8 py-2 transition ease-in-out duration-200 hover:bg-red-900 hover:scale-110"
+                className="bg-red-800 text-white text-lg rounded-md px-8 py-2 transition ease-in-out duration-200 hover:bg-red-900 hover:scale-110"
               >
                 Sign In
               </button>

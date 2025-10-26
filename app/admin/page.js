@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 
 export default function AdminDashboard() {
-  const [currentDate] = useState(new Date());
-
   // Sample data
   const activeBookings = [
     {
@@ -64,10 +62,10 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="p-6 h-[calc(100vh-4rem)] overflow-hidden flex flex-col">
+    <main className="p-6 h-[calc(100vh-8.5rem)] overflow-hidden flex flex-col">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome Admin</h1>
         <p className="text-gray-600 mt-1">
           Overview of your bookings and resources
         </p>
