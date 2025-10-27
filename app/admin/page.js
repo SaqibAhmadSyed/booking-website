@@ -57,7 +57,7 @@ export default function AdminDashboard() {
   const stats = {
     roomsBookedToday: 8,
     totalBookings: 12,
-    peakTime: "4:00PM - 5:00PM",
+    peakTime: "4:00PM - 5:00pm",
     availableRooms: 100,
   };
 
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-5">
           <div className="flex items-center justify-between">
             <div>
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
               <p className="text-sm font-medium text-gray-600">
                 Peak Booking Time
               </p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">
+              <p className="text-xl font-bold text-gray-900 mt-2">
                 {stats.peakTime}
               </p>
             </div>
