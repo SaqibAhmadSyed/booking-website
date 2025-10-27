@@ -62,8 +62,6 @@
   - Most popular resources
   - Peak booking hours
   - Booking approval and cancellation rates
-  - Overall resource utilization
-- Export reports (CSV or PDF).
 
 ---
 
