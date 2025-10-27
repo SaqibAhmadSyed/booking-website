@@ -1,28 +1,18 @@
 "use client";
 import Modal from "../../components/modal";
 import EditModal from "../../components/edit-modal";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function Bookings() {
   const [activeBooking, setActiveBooking] = useState(null);
-  const [modalMessage, setModalMessage] = useState("");
-  const [editBooking, setEditBooking] = useState(null); // added state for edit modal
-
-  // Toast state (replaces modal)
-  const [toast, setToast] = useState({
-    visible: false,
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
     message: "",
-    type: "info", // 'success' | 'error' | 'info'
+    icon: "info",
+    iconColor: "text-gray-800",
+    action: null,
   });
-
-  useEffect(() => {
-    if (toast.visible) {
-      const t = setTimeout(() => {
-        setToast((s) => ({ ...s, visible: false }));
-      }, 3500);
-      return () => clearTimeout(t);
-    }
-  }, [toast.visible]);
+  const [editBooking, setEditBooking] = useState(null);
 
   // bookings array
   const bookings = [
@@ -106,7 +96,6 @@ export default function Bookings() {
       time: "16:00 – 18:00",
       status: "pending",
     },
-
     {
       id: "#703001",
       name: "LB-101",
@@ -139,8 +128,27 @@ export default function Bookings() {
     },
   ];
 
-  const showToast = (message, type = "info") => {
-    setToast({ visible: true, message, type });
+  const openModal = (booking, action, message, icon, iconColor) => {
+    setActiveBooking(booking);
+    setModalConfig({
+      isOpen: true,
+      message,
+      icon,
+      iconColor,
+      action,
+    });
+  };
+
+  const closeModal = () => {
+    setModalConfig({ ...modalConfig, isOpen: false });
+    setActiveBooking(null);
+  };
+
+  const handleConfirm = (booking) => {
+    if (modalConfig.action) {
+      modalConfig.action(booking);
+    }
+    closeModal();
   };
 
   return (
@@ -170,9 +178,9 @@ export default function Bookings() {
         </section>
       </div>
 
-      {/* Filters */}
+      {/* Table */}
       <section className="overflow-x-auto rounded-md border border-slate-400 shadow-sm">
-        <table className="min-w-full text-md border-collapse ">
+        <table className="min-w-full text-md border-collapse">
           <thead className="bg-red-200">
             <tr>
               {[
@@ -225,26 +233,25 @@ export default function Bookings() {
                 </td>
                 <td className="px-4 py-2 space-x-2">
                   <button
-                    className="px-2 py-1 bg-green-100 text-green-700 rounded transition ease-in-out duration-100 hover:bg-green-200"
-                    onClick={() => {
-                      console.log("approve", booking);
-                      showToast(`Booking ${booking.id} approved`, "success");
-                    }}
-                  >
+                    className="px-2 py-1 bg-green-100 text-green-700 rounded transition ease-in-out duration-100 hover:bg-green-200">
                     Approve
                   </button>
 
                   <button
                     className="px-2 py-1 bg-red-100 text-red-700 rounded transition ease-in-out duration-100 hover:bg-red-200"
-                    onClick={() => {
-                      console.log("reject", booking);
-                      showToast(`Booking ${booking.id} rejected`, "error");
-                    }}
+                    onClick={() =>
+                      openModal(
+                        booking,
+                        (b) => console.log("reject", b),
+                        `Are you sure you want to reject booking ${booking.id}?`,
+                        "danger",
+                        "text-red-600"
+                      )
+                    }
                   >
                     Reject
                   </button>
 
-                  {/* wire Edit button to open edit modal (no style changes) */}
                   <button
                     className="px-2 py-1 bg-blue-100 text-blue-700 rounded transition ease-in-out duration-100 hover:bg-blue-200"
                     onClick={() => setEditBooking(booking)}
@@ -254,10 +261,15 @@ export default function Bookings() {
 
                   <button
                     className="px-2 py-1 bg-gray-100 text-gray-700 rounded transition ease-in-out duration-100 hover:bg-gray-200"
-                    onClick={() => {
-                      console.log("delete", booking);
-                      showToast(`Booking ${booking.id} deleted`, "error");
-                    }}
+                    onClick={() =>
+                      openModal(
+                        booking,
+                        (b) => console.log("delete", b),
+                        `Are you sure you want to delete booking ${booking.id}? This action cannot be undone.`,
+                        "danger",
+                        "text-red-600"
+                      )
+                    }
                   >
                     Delete
                   </button>
@@ -268,88 +280,26 @@ export default function Bookings() {
         </table>
       </section>
 
-      {/* Toast (replaces modal) */}
-      {toast.visible && (
-        <div
-          className="fixed right-4 bottom-6 z-[9999] max-w-sm w-full"
-          aria-live="polite"
-        >
-          <div
-            className={`flex items-start space-x-3 rounded shadow-lg p-3 border ${
-              toast.type === "success"
-                ? "bg-green-50 border-green-200 text-green-800"
-                : toast.type === "error"
-                ? "bg-red-50 border-red-200 text-red-800"
-                : "bg-slate-50 border-slate-200 text-slate-800"
-            }`}
-          >
-            <div className="flex-shrink-0">
-              {toast.type === "success" ? (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              ) : toast.type === "error" ? (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
-                  />
-                </svg>
-              )}
-            </div>
-            <div className="flex-1 text-sm">{toast.message}</div>
-            <button
-              className="text-slate-500 hover:text-slate-700 ml-2"
-              onClick={() => setToast((s) => ({ ...s, visible: false }))}
-              aria-label="Dismiss"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
+      {/* Confirmation Modal */}
+      {modalConfig.isOpen && (
+        <Modal
+          booking={activeBooking}
+          message={modalConfig.message}
+          icon={modalConfig.icon}
+          iconColor={modalConfig.iconColor}
+          onConfirm={handleConfirm}
+          onClose={closeModal}
+        />
       )}
 
-      {/* Edit modal (no style changes) */}
+      {/* Edit Modal */}
       <EditModal
         booking={editBooking}
         isOpen={!!editBooking}
         onClose={() => setEditBooking(null)}
         onSubmit={(updated) => {
-          // handle update (currently logs and closes)
           console.log("Updated booking:", updated);
           setEditBooking(null);
-          showToast(`Booking ${updated?.id ?? ""} updated`, "success");
         }}
       />
     </div>
