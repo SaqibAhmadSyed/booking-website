@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports Booking</title>
+    <link href="StudentDashboardStyle.css" rel="stylesheet">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="UniTitle">
+            <a href="log-in.html">
+                <img src="Images/UniversityLogo.png" alt="University Logo" , id="UniversityLogo">
+            </a>
+            <h2 id="titletext">- Reserve a resource</h2>
+        </div>
+
+        <div class="profilesection">
+            <form method="get">
+                <input type="button" id="MyBookingsBtn" value="My Bookings", onclick="location.href='MyBookings.html'">
+            </form>
+            <a href ="#" onclick="getEditProfileForm()"/>
+            <img src="Images/AccountIcon.png",alt="My Account", id="AccountIcon">
+            </a>
+        </div>
+    </header>
+    <hr>
+    </br>
+    <form method="get" id="Dropdownmenu">
+        <label>Type of facility</label>
+        <select name="Type of Facility" onchange="window.location.href=this.value"> <!--Use in line Java Script to direct user to the selected page-->
+            <option value="SportsBooking.html">Sports equipment</option>
+            <option value="StudyRoomBooking.html">Study Rooms</option>
+            <option value="LabBooking.html">Labs</option>
+        </select>
+    </form>
+
+    <div id="DateSelector">
+        <button id="Previousbtn"><</button>
+            <p id="currentDate">Tuesday, October 14th, 2025</p>
+        <button id="Forwardbtn">></button>
+    </div>
+
+    <div class="Table">
+        <table id="RoomsTable">
+            <tr>
+                <th>Equipment</th>
+                <th>Description</th>
+            </tr>
+            <tr class="RoomsTableRow">
+                <td class="CellName">
+                    <h3>Tennis Set #1</h3>
+                    <img class ="SportsImages" src="Images/TennisSet.jpg" alt="TennisSetimage">
+                </td>
+                <td class="CellDesc">
+                    <p> <b>Contents:</b> 2 Rackets + 5 balls</br>
+                        <b>Location:</b> Duplantis Athletic Space </br>
+                    </p>
+                </td>
+            </tr>
+            <tr class="RoomsTableRow">
+                <td class="CellName">
+                    <h3>Tennis Set #2</h3>
+                    <img class ="SportsImages" src="Images/TennisSet.jpg" alt="TennisSetimage">
+                </td>
+                <td class="CellDesc">
+                    <p> <b>Contents:</b> 2 Rackets + 5 balls</br>
+                        <b>Location:</b> Duplantis Athletic Space </br>
+                    </p>
+                </td>
+            </tr>
+            <tr class="RoomsTableRow">
+                <td class="CellName">
+                    <h3>Yoga Room</h3>
+                    <img class ="SportsImages" src="Images/YogaRoom.jpg" alt="YogaRoomimage">
+                </td>
+                <td class="CellDesc">
+                    <p> <b>Capacity:</b> 30 people</br>
+                        <b>Location:</b> Wellness Center </br>
+                    </p>
+                </td>
+            </tr>
+            <tr class="RoomsTableRow">
+                <td class="CellName">
+                    <h3>Basketball Court</h3>
+                    <img class ="SportsImages" src="Images/BBCourt.jpg" alt="BasketballCourtimage">
+                </td>
+                <td class="CellDesc">
+                    <p> <b>Capacity:</b> 15 people</br>
+                        <b>Facilities:</b> 3 Nets + 8 balls</br>
+                        <b>Location:</b> Wellness Center</br>
+                    </p>
+                </td>
+            </tr>
+        </table>
+
+        <table id="SportScheduleTable">
+            <thead>
+            <tr>
+                <th>10:00</th>
+                <th>11:00</th>
+                <th>12:00</th>
+                <th>13:00</th>
+                <th>14:00</th>
+                <th>15:00</th>
+                <th>16:00</th>
+                <th>17:00</th>
+                <th>18:00</th>
+                <th>19:00</th>
+                <th>20:00</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="TableScheduleRow">
+                <td class="available" ></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+            </tr>
+            <tr class="TableScheduleRow">
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+            </tr>
+            <tr class="TableScheduleRow">
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="available"></td>
+                <td class="unavailable"></td>
+                <td class="unavailable"></td>
+                <td class="available"></td>
+                <td class="available"></td>
+            </tr>
+            <tr class="TableScheduleRow">
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+                <td class="blocked" onclick="window.alert('Space is blocked by an administrator!');"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </br>
+    <footer>
+        <hr>
+        <h1>Rules</h1>
+        <p>You cannot book multiple study rooms or multiple labs in the same time slot.</br></br>
+            Study rooms can be booked for <b>3 hours</b> maximum.</br>
+            Labs can be booked for <b>5 hours</b> maximum.</br>
+            Sports equipment and facility can be booked for <b>2 hours</b> maximum.</p>
+    </footer>
+    <div id="edit-profile-container" style="display: none"></div>
+    <script src="edit-profile-form.js"></script>
+    <div id="edit-profile-overlay" style="display:none"></div>
+</body>
+</html>
