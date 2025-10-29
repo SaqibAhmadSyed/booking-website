@@ -86,4 +86,7 @@ deploy on [vercel.com](https://vercel.com/home)
 ---
 # Used Libraries
 
-- Graphs: [apexcharts](https://apexcharts.com/)
+Graphs: [apexcharts](https://apexcharts.com/) 
+```bash
+npm install apexcharts --save
+```
