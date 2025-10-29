@@ -1,78 +1,53 @@
-## System Requirements
+# booking-website 
+
+## Features
 
 ### End User (Students) Features
 
 #### 1. Account Management
-- Create and manage user account (name, email, password, etc.).
-- Update profile information.
-- Secure login and logout.
+- Sign up to create a new student account.  
+- Log in securely using existing credentials.  
+- Manage account settings (update email, password, phone number).  
+- Log out securely.
 
-#### 2. Resource Browsing
-- View a list of all available university resources (rooms, labs, equipment, etc.).
-- Filter or search for resources based on category, location, or availability.
+#### 2. Availability Viewing
+- View facility schedules (labs, study rooms, sports areas, etc.) on separate pages.  
+- See the status of each facility depending on the selected hour/date.  
+- View an overall schedule or calendar showing which facilities are booked or available.
 
-#### 3. Availability Viewing
-- See real-time availability of each resource through calendars or schedules.
-- Check time slots and availability before booking.
-
-#### 4. Booking Management
-- Make bookings/reservations for resources by selecting:
-  - Date and time
-  - Purpose or reason for booking
-- Modify or cancel existing bookings.
-- View upcoming and past bookings in one place.
-
-#### 5. Conflict Handling
-- The system must prevent double-booking or overlapping reservations.
-- Users should receive clear error messages when time conflicts occur.
+#### 3. Booking Management *(Upcoming Feature)*
+- Book available rooms during open time slots.  
+- Edit or cancel existing bookings.  
+- Handle booking conflicts automatically to prevent overlapping reservations.
 
 ---
 
-###  Administrator (Resource Manager) Features
+### Administrator Features
 
-#### 1. Authentication & Role Management
-- Secure login and logout for admin accounts.
-- Access to an admin dashboard (restricted by role).
-- Manage personal profile information.
+#### 1. Authentication & Account Management
+- Log in securely as an administrator.  
+- Manage admin account settings (email, password, phone number).  
+- Access a private admin dashboard.
 
-#### 2. Resource Management
-- **Create Resources:** Add new rooms, labs, or equipment with details:
-  - Name
-  - Description
-  - Location
-  - Capacity
-  - Image (optional)
-- **Edit Resources:** Update resource details when needed.
-- **Delete Resources:** Remove resources that are no longer available.
-- **Block/Unblock Resources:** Temporarily disable resources for maintenance or special events.
+#### 2. Facility Management
+- Create new facilities (rooms, labs, etc.) for specific dates via a calendar interface.  
+- Approve or reject student booking requests.  
+- View the schedule for each facility.
 
-#### 3. Availability & Scheduling
-- Define working hours for each resource (e.g., weekdays 8 AM – 10 PM).
-- Add exceptions or blackout dates (e.g., holidays, renovations).
-- Manage special availability periods for events or limited access.
+#### 3. Analytics & Statistics
+- View statistics on facility usage (e.g., number of bookings per day).
 
-#### 4. Booking Management
-- View all booking requests from users.
-- Approve or reject bookings (if manual approval is required).
-- Modify or cancel bookings.
-- Automatically detect and prevent double-booking.
-
-#### 5. Reporting & Analytics
-- View usage statistics such as:
-  - Most popular resources
-  - Peak booking hours
-  - Booking approval and cancellation rates
+#### 4. Facility Editing *(Upcoming Feature)*
+- Edit existing facility information (name, schedule, capacity, etc.).
 
 ---
 
-### Bonus Features (Optional)
-#### For End Users
-- Receive notifications (email or in-app) for booking confirmations, updates, or cancellations.
-
-#### For Administrators
-- Send announcements or notifications to users (e.g., maintenance alerts, policy updates).
-- View audit logs of admin actions (who created, edited, or deleted resources).
-
+### Upcoming Features Summary
+- Administrator ability to edit rooms.  
+- Student ability to manage their own bookings (edit time/room).  
+- Student ability to book rooms during available spaces.  
+- Booking conflict handling.  
+- Server-side database to store all rooms, users, and bookings.
 
 ## How to run the project
 
@@ -95,7 +70,7 @@ cd booking-website
 ```bash
 npm install
 ```
-### Run he Development Server
+### Run the Development Server
 ```bash
 npm run dev
 ```
@@ -107,5 +82,8 @@ http://localhost:3000
 ```bash
 npm run build
 ```
-deploy on [vercel.com](https://vercel.com/home)
+deploy on [vercel.com](https://vercel.com/home) 
+---
+# Used Libraries
 
+- Graphs: [apexcharts](https://apexcharts.com/)
