@@ -21,7 +21,7 @@ export default function Signup() {
           {/* Logo */}
           <div className="flex flex-col items-center">
             <Image
-              src="/UniversityLogo.png"
+              src="/img/UniversityLogo.png"
               alt="logo"
               width={200}
               height={200}
