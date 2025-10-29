@@ -312,7 +312,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/admin/reservation"
+              href="/user/room-list"
               className="inline-block px-8 py-4 bg-white text-red-700 font-semibold rounded-lg shadow-lg hover:bg-gray-100 transition transform hover:scale-105"
             >
               Start Booking

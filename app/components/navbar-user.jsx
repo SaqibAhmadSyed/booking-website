@@ -25,7 +25,6 @@ export default function Navbar() {
           {[
             { name: "Home", path: "/user" },
             { name: "View Rooms", path: "/user/room-list" },
-            { name: "Make a Reservation", path: "/user/reservation" },
             { name: "Booking History", path: "/user/history" },
           ].map((item) => (
             <Link

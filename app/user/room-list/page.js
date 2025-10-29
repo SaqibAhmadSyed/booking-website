@@ -1,61 +1,62 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import ViewModal from "../../components/view-modal";
 
 export default function RoomList() {
   const [selectedDate, setSelectedDate] = useState("Tuesday, October 14th, 2025");
   const [facilityType, setFacilityType] = useState("labs");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const rooms = [
-    {
-      id: 1,
-      name: "Lab10",
-      image: "/Lab10.jpg",
-      capacity: 8,
-      location: "Rutherford Science Hub",
-      schedule: ["unavailable", "unavailable", "unavailable", "unavailable", "unavailable", "available", "available", "available", "available", "available", "unavailable", "unavailable", "unavailable"]
-    },
-    {
-      id: 2,
-      name: "Lab11",
-      image: "/Images/Lab11.jpg",
-      capacity: 8,
-      location: "Rutherford Science Hub",
-      schedule: ["available", "available", "available", "available", "available", "available", "available", "unavailable", "unavailable", "unavailable", "available", "available", "available"]
-    },
-    {
-      id: 3,
-      name: "Lab12",
-      image: "/Images/Lab12.jpg",
-      capacity: 15,
-      location: "Rutherford Science Hub",
-      schedule: ["available", "available", "available", "available", "available", "available", "available", "unavailable", "unavailable", "unavailable", "booked", "booked", "booked"]
-    }
+  const baseRooms = [
+    { id: 1, type: "labs", name: "Lab10", image: "/img/Lab10.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["unavailable","unavailable","unavailable","unavailable","unavailable","available","available","available","available","available","unavailable","unavailable","unavailable"] },
+    { id: 2, type: "labs", name: "Lab11", image: "/img/Lab11.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["available","available","available","available","available","available","available","unavailable","unavailable","unavailable","available","available","available"] },
+    { id: 3, type: "studyrooms", name: "Study Room A", image: "/img/room101.jpg", capacity: 4, location: "SGW Library", schedule: ["available","available","booked","available","available","available","unavailable","available","available","available","available","available","available"] },
+    { id: 4, type: "studyrooms", name: "Study Room B", image: "/img/room102.jpg", capacity: 6, location: "Loyola Library", schedule: ["available","unavailable","available","available","available","available","available","available","booked","available","available","available","available"] },
+    { id: 5, type: "sports", name: "Basketball Court", image: "/img/BBCourt.jpg", capacity: 12, location: "Sports Complex", schedule: ["available","available","available","available","booked","booked","available","available","available","available","available","available","available"] },
+    { id: 6, type: "sports", name: "Tennis Court", image: "/img/TennisSet.jpg", capacity: 4, location: "Sports Complex", schedule: ["unavailable","available","available","available","available","available","available","booked","available","available","available","available","available"] }
   ];
 
-  const timeSlots = ["8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
+  // Duplicate data for demo
+  const rooms = [
+    ...baseRooms,
+    ...baseRooms.map(r => ({ ...r, id: r.id + 10, name: r.name + " Demo" })),
+    ...baseRooms.map(r => ({ ...r, id: r.id + 20, name: r.name + " Extra" }))
+  ];
 
-  const handlePreviousDate = () => {
-    // Handle previous date logic
-    console.log("Previous date");
+  const timeSlots = ["8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
+
+  const handlePreviousDate = () => console.log("Previous date");
+  const handleNextDate = () => console.log("Next date");
+  
+  const handleRoomClick = (room) => {
+    // Transform room data to match ViewModal expectations
+    const modalRoom = {
+      ...room,
+      img: room.image,
+      roomNumber: room.id,
+      description: `A ${room.type === 'labs' ? 'laboratory' : room.type === 'studyrooms' ? 'study room' : 'sports facility'} with capacity for ${room.capacity} people.`,
+      amenities: room.type === 'labs' ? ['Computers', 'Projector', 'Whiteboard', 'Lab Equipment'] :
+                 room.type === 'studyrooms' ? ['Tables', 'Chairs', 'Whiteboard', 'WiFi'] :
+                 ['Equipment', 'Changing Room', 'Storage', 'Safety Equipment'],
+      availability: 'Available for booking during selected time slots'
+    };
+    setSelectedRoom(modalRoom);
+    setIsModalOpen(true);
   };
 
-  const handleNextDate = () => {
-    // Handle next date logic
-    console.log("Next date");
-  };
+  const filteredRooms = rooms.filter(room => room.type === facilityType);
 
   return (
     <main className="p-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Reserve a Resource</h1>
-        <p className="text-gray-600 mt-1">
-          Select a facility and time slot to make your booking
-        </p>
+        <p className="text-gray-600 mt-1">Select a facility and time slot to make your booking</p>
       </div>
-
-      {/* Facility Type Selector */}
+      
+      {/* Dropdown */}
       <div className="mb-6">
         <label htmlFor="facilityType" className="block text-sm font-medium text-gray-700 mb-2">
           Type of Facility
@@ -74,55 +75,30 @@ export default function RoomList() {
 
       {/* Date Selector */}
       <div className="flex items-center justify-center gap-4 mb-8 bg-white rounded-lg shadow p-4">
-        <button
-          onClick={handlePreviousDate}
-          className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold"
-        >
-          &lt;
-        </button>
-        <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">
-          {selectedDate}
-        </p>
-        <button
-          onClick={handleNextDate}
-          className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold"
-        >
-          &gt;
-        </button>
+        <button onClick={handlePreviousDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&lt;</button>
+        <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">{selectedDate}</p>
+        <button onClick={handleNextDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&gt;</button>
       </div>
 
-      {/* Rooms and Schedule Table */}
+      {/* Rooms Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <div className="flex">
             {/* Left Column - Room Info */}
             <div className="flex-shrink-0 border-r border-gray-200">
-              <div className="bg-gray-100 px-4 py-3 border-b border-gray-200">
-                <h3 className="font-semibold text-gray-900">Room</h3>
-              </div>
-              {rooms.map((room) => (
-                <div
-                  key={room.id}
-                  className="border-b border-gray-200 p-4 flex items-center gap-4 bg-white hover:bg-gray-50 transition"
-                  style={{ minHeight: "120px" }}
-                >
-                  <Image
-                    src={room.image}
-                    alt={room.name}
-                    width={100}
-                    height={80}
-                    className="rounded-lg object-cover"
-                  />
+              <div className="bg-gray-100 px-4 py-3 border-b border-gray-200"><h3 className="font-semibold text-gray-900">Room</h3></div>
+              {filteredRooms.map(room => (
+                <div key={room.id} className="border-b border-gray-200 p-4 flex items-center gap-4 bg-white hover:bg-gray-50 transition" style={{ minHeight: "120px" }}>
+                  <Image src={room.image} alt={room.name} width={50} height={50} className="rounded-lg object-cover" />
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-lg mb-1">
+                    <h4 
+                      className="font-semibold text-gray-900 text-lg mb-1 cursor-pointer hover:text-blue-600 transition-colors"
+                      onClick={() => handleRoomClick(room)}
+                    >
                       {room.name}
                     </h4>
-                    <p className="text-sm text-gray-600">
-                      <strong>Capacity:</strong> {room.capacity} students
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <strong>Location:</strong> {room.location}
-                    </p>
+                    <p className="text-sm text-gray-600"><strong>Capacity:</strong> {room.capacity} students</p>
+                    <p className="text-sm text-gray-600"><strong>Location:</strong> {room.location}</p>
                   </div>
                 </div>
               ))}
@@ -130,40 +106,22 @@ export default function RoomList() {
 
             {/* Right Column - Schedule Grid */}
             <div className="flex-1 overflow-x-auto">
-              {/* Time Headers */}
               <div className="flex bg-gray-100 border-b border-gray-200">
                 {timeSlots.map((time, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 min-w-[70px] px-3 py-3 text-center font-semibold text-gray-900 text-sm border-l border-gray-200"
-                  >
-                    {time}
-                  </div>
+                  <div key={index} className="flex-1 min-w-[70px] px-3 py-3 text-center font-semibold text-gray-900 text-sm border-l border-gray-200">{time}</div>
                 ))}
               </div>
-
-              {/* Schedule Rows */}
-              {rooms.map((room) => (
-                <div
-                  key={room.id}
-                  className="flex border-b border-gray-200"
-                  style={{ minHeight: "120px" }}
-                >
+              {filteredRooms.map(room => (
+                <div key={room.id} className="flex border-b border-gray-200" style={{ minHeight: "120px" }}>
                   {room.schedule.map((status, index) => (
                     <div
                       key={index}
                       className={`flex-1 min-w-[70px] border-l border-gray-200 cursor-pointer transition ${
-                        status === "available"
-                          ? "bg-green-100 hover:bg-green-200"
-                          : status === "unavailable"
-                          ? "bg-red-100"
-                          : "bg-blue-200"
+                        status === "available" ? "bg-green-100"
+                        : status === "unavailable" ? "bg-red-100"
+                        : "bg-blue-200"
                       }`}
-                      onClick={() => {
-                        if (status === "available") {
-                          console.log(`Book ${room.name} at ${timeSlots[index]}`);
-                        }
-                      }}
+                      onClick={() => { if (status === "available") console.log(`Book ${room.name} at ${timeSlots[index]}`); }}
                     ></div>
                   ))}
                 </div>
@@ -174,20 +132,22 @@ export default function RoomList() {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap gap-6 justify-center">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-green-100 border border-gray-300 rounded"></div>
-          <span className="text-sm text-gray-700">Available</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-red-100 border border-gray-300 rounded"></div>
-          <span className="text-sm text-gray-700">Unavailable</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-200 border border-gray-300 rounded"></div>
-          <span className="text-sm text-gray-700">Your Booking</span>
-        </div>
+      <div className="mt-6 flex flex-wrap gap- justify-center">
+        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-green-100 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Available</span></div>
+        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-red-100 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Unavailable</span></div>
+        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-blue-200 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Your Booking</span></div>
       </div>
+
+      {/* ViewModal */}
+      {isModalOpen && (
+        <ViewModal 
+          room={selectedRoom} 
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedRoom(null);
+          }} 
+        />
+      )}
     </main>
   );
 }

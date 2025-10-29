@@ -77,7 +77,7 @@ export default function Signup() {
           {/* Create Account Button */}
           <div className="flex justify-center">
             <Link
-              href="/user/home"
+              href="/"
               className="bg-red-900 text-white text-lg rounded-md px-6 py-2 transition-transform ease-in-out duration-200 hover:scale-105 text-center"
             >
               Create Account
