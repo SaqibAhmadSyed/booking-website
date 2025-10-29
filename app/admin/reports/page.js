@@ -4,6 +4,15 @@ import BarChart from "@/app/components/bar-chart";
 import PieChart from "@/app/components/pie-chart";
 import RadarChart from "@/app/components/radar-chart";
 
+/**
+ * Admin reports page - Analytics and statistics dashboard
+ * Features:
+ * - Multiple chart types (bar, pie, radar) for data visualization
+ * - Booking statistics and trends
+ * - Building-wise booking distribution
+ * - Booking status breakdown
+ * - Responsive grid layout for charts
+ */
 export default function Reports() {
   return (
     <main className="p-6">

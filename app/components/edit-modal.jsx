@@ -1,5 +1,14 @@
 import React from "react";
 
+/**
+ * Edit booking modal component - View and edit booking details
+ * Features:
+ * - Display booking information in modal format
+ * - Read-only view of booking details
+ * - Close functionality
+ * - Responsive modal design
+ * - Used in admin bookings management
+ */
 export default function ViewBookingModal({
   booking = null,
   isOpen = false,

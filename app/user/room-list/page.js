@@ -3,6 +3,16 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ViewModal from "../../components/view-modal";
 
+/**
+ * Room list page - Browse and book available rooms/facilities
+ * Features:
+ * - Facility type filtering (labs, study rooms, sports)
+ * - Interactive schedule grid with time slots
+ * - Room details with images and capacity information
+ * - Clickable room names to open detailed view modal
+ * - Date navigation and availability status indicators
+ * - Color-coded availability legend
+ */
 export default function RoomList() {
   const [selectedDate, setSelectedDate] = useState("Tuesday, October 14th, 2025");
   const [facilityType, setFacilityType] = useState("labs");

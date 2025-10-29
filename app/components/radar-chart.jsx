@@ -3,6 +3,15 @@ import React from "react";
 import dynamic from "next/dynamic";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+/**
+ * Radar chart component - Building-wise booking distribution visualization
+ * Features:
+ * - ApexCharts radar chart showing bookings per building
+ * - Campus building codes (H, LB, JMSB, GN, FB)
+ * - Interactive radar plot with markers
+ * - Custom styling and grid configuration
+ * - Responsive design with proper sizing
+ */
 export default function BuildingBookingsRadar() {
   const [state, setState] = React.useState({
     series: [

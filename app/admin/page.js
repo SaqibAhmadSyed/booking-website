@@ -1,6 +1,15 @@
 "use client";
 import React, { useState } from "react";
 
+/**
+ * Admin dashboard - Main admin interface with overview statistics
+ * Features:
+ * - Key metrics cards (rooms booked today, total bookings, peak time, available rooms)
+ * - Active bookings list with real-time status
+ * - Pending requests with approve/decline actions
+ * - Blocked resources management
+ * - Responsive grid layout with scrollable sections
+ */
 export default function AdminDashboard() {
   // Sample data
   const activeBookings = [

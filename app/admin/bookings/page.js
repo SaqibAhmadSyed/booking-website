@@ -3,6 +3,15 @@ import Modal from "../../components/modal";
 import EditModal from "../../components/edit-modal";
 import React, { useState } from "react";
 
+/**
+ * Admin bookings management page - Manage all room bookings
+ * Features:
+ * - Comprehensive bookings table with search and filter
+ * - Booking status management (approve, reject, edit, delete)
+ * - Confirmation modals for destructive actions
+ * - Edit modal for booking modifications
+ * - Real-time status updates and visual indicators
+ */
 export default function Bookings() {
   const [activeBooking, setActiveBooking] = useState(null);
   const [modalConfig, setModalConfig] = useState({

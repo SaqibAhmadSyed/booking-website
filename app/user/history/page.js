@@ -2,6 +2,15 @@
 import React, { useState } from "react";
 import ViewModal from "@/app/components/view-modal";
 
+/**
+ * User booking history page - Displays past and current bookings
+ * Features:
+ * - Table view of booking history
+ * - Room details with images and information
+ * - Modal view for detailed booking information
+ * - Search and filter functionality
+ * - Booking status tracking
+ */
 const rooms = [
     {
       id: 1,

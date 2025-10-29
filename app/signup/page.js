@@ -2,6 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
+/**
+ * Signup page component - User registration form
+ * Features:
+ * - User registration with email, student ID, and password
+ * - Password confirmation field
+ * - Navigation back to login page
+ * - University branding and styling
+ */
 export default function Signup() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-100 text-black font-roboto text-[15px] font-normal">

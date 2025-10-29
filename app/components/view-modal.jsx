@@ -5,6 +5,16 @@ import Link from "next/link";
 import Calendar from "./calendar";
 import Toast from "./toast";
 
+/**
+ * View modal component - Room details and booking interface
+ * Features:
+ * - Room information display with images and amenities
+ * - Integrated booking form with calendar
+ * - Two-view system: room details and reservation form
+ * - Form validation and submission handling
+ * - Success notifications and auto-close functionality
+ * - Responsive modal sizing based on content
+ */
 export default function ViewModal({ room, onClose }) {
   const [showReservation, setShowReservation] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);

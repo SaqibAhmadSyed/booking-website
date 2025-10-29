@@ -3,6 +3,15 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+/**
+ * Admin navigation component - Sidebar navigation for admin interface
+ * Features:
+ * - Fixed sidebar with university logo
+ * - Navigation menu for admin functions
+ * - Account dropdown with profile and logout
+ * - Responsive design with proper z-indexing
+ * - Hover effects and smooth transitions
+ */
 export default function Navbar() {
   return (
     <>

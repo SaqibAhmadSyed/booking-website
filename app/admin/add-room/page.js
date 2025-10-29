@@ -2,6 +2,15 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+/**
+ * Add room page - Admin interface for adding new rooms/facilities
+ * Features:
+ * - Image upload with preview functionality
+ * - Room details form (name, location, capacity, type, description)
+ * - Location selection dropdown with campus options
+ * - Room type categorization (meeting spaces, study spaces, sports, etc.)
+ * - Form validation and submission
+ */
 export default function AddRoom() {
   const [imagePreview, setImagePreview] = useState(null);
 

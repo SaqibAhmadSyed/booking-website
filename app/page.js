@@ -3,6 +3,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Home page component - Landing page with login form
+ * Features:
+ * - Role selection (Student/Admin)
+ * - Login form with email, student ID, and password
+ * - Remember me functionality
+ * - Navigation to appropriate dashboard based on role
+ */
 export default function Home() {
   const [role, setRole] = useState("student");
   const router = useRouter();

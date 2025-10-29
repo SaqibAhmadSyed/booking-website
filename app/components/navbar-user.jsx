@@ -3,6 +3,15 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+/**
+ * User navigation component - Top navigation bar for user interface
+ * Features:
+ * - Fixed top navigation with university logo
+ * - Navigation links for user functions
+ * - Account dropdown with profile and logout
+ * - Responsive design with proper spacing
+ * - Hover effects and smooth transitions
+ */
 export default function Navbar() {
   return (
     <>

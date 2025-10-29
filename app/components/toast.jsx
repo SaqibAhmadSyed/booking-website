@@ -1,6 +1,15 @@
 "use client";
 import React, { useEffect } from "react";
 
+/**
+ * Toast notification component - User feedback messages
+ * Features:
+ * - Auto-dismiss with configurable duration
+ * - Multiple types (success, error, info) with appropriate styling
+ * - Fixed positioning in bottom-right corner
+ * - Manual dismiss functionality
+ * - Accessible with proper ARIA attributes
+ */
 export default function Toast({ visible, message, type = "info", duration = 3500, onClose }) {
   useEffect(() => {
     if (!visible) return;

@@ -1,5 +1,15 @@
 import React, { useState } from "react";
 
+/**
+ * Calendar component - Interactive date picker for booking system
+ * Features:
+ * - Month navigation with previous/next buttons
+ * - Today highlighting and selected date indication
+ * - Clickable date selection
+ * - Selected date display with formatted output
+ * - Responsive grid layout for calendar days
+ * - Disabled state for empty cells
+ */
 export default function Calendar({ selectedDate, setSelectedDate }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 

@@ -4,6 +4,15 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+/**
+ * Bar chart component - Interactive chart with tabbed views
+ * Features:
+ * - Weekly reservations area chart
+ * - Peak booking hours bar chart
+ * - Tabbed interface for switching between views
+ * - Responsive design with ApexCharts
+ * - Gradient fills and smooth animations
+ */
 export default function ReportsChartTabs() {
   const [activeTab, setActiveTab] = useState("weekly"); // 'weekly' or 'peak'
 

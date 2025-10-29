@@ -3,6 +3,15 @@ import React, { useState } from "react";
 import Calendar from "../../components/calendar";
 import Toast from "../../components/toast";
 
+/**
+ * Reservation form component - Reusable booking form with calendar
+ * Features:
+ * - Interactive calendar for date selection
+ * - Form fields for booking details
+ * - Form validation and submission handling
+ * - Success notification with toast messages
+ * - Two-column responsive layout
+ */
 export default function Reservation() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({

@@ -3,6 +3,15 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+/**
+ * User dashboard homepage - Welcome page with booking system overview
+ * Features:
+ * - Hero section with call-to-action
+ * - Step-by-step booking process guide
+ * - Booking rules and policies
+ * - System features showcase
+ * - Multiple campus locations support
+ */
 export default function HomePage() {
   const steps = [
     {

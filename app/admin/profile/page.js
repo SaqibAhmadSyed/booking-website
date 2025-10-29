@@ -2,6 +2,15 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+/**
+ * Admin profile page - Edit admin personal information and profile photo
+ * Features:
+ * - Profile photo upload with preview
+ * - Personal information editing (name, email, phone)
+ * - Form validation and submission
+ * - Image file handling with FileReader API
+ * - Same functionality as user profile but for admin users
+ */
 export default function Profile() {
   const [imagePreview, setImagePreview] = useState(null);
 

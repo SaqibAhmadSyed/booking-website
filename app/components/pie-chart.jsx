@@ -5,6 +5,15 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
+/**
+ * Pie chart component - Booking status distribution visualization
+ * Features:
+ * - ApexCharts pie chart with booking status breakdown
+ * - Color-coded segments (approved, pending, rejected)
+ * - Data labels with percentages
+ * - Responsive design with mobile breakpoints
+ * - Custom styling and legend positioning
+ */
 export default function PieChart() {
   const [state, setState] = React.useState({
     series: [45, 30, 25], // Approved, Pending, Rejected

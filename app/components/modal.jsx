@@ -1,5 +1,14 @@
 import React from "react";
 
+/**
+ * Confirmation modal component - Generic modal for confirmations and alerts
+ * Features:
+ * - Customizable icon (React element or predefined types)
+ * - Configurable message and styling
+ * - Confirm and cancel actions
+ * - Backdrop click to close
+ * - Support for different icon types (info, success, danger)
+ */
 export default function Modal({
   booking,
   message = "Are you sure?",

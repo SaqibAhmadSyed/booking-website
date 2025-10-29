@@ -1,3 +1,11 @@
+/**
+ * Footer component - Site footer with branding and copyright
+ * Features:
+ * - Fixed positioning at bottom of page
+ * - University branding and current year
+ * - Responsive design with mobile-friendly layout
+ * - Consistent styling across all pages
+ */
 export default function Footer() {
   const year = new Date().getFullYear();
   return (

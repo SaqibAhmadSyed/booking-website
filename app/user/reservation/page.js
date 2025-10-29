@@ -3,6 +3,15 @@ import React, { useState } from "react";
 import Calendar from "../../components/calendar";
 import Toast from "../../components/toast";
 
+/**
+ * Reservation page - Create new room bookings
+ * Features:
+ * - Interactive calendar for date selection
+ * - Form for booking details (name, student ID, capacity, time, purpose)
+ * - Form validation and submission
+ * - Success notification with toast messages
+ * - Two-column layout with calendar and form
+ */
 export default function Reservation() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
