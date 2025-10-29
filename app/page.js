@@ -95,7 +95,7 @@ export default function Home() {
           <div className="flex justify-center">
             <button
               type="button"
-              onClick={() => router.push(role === "admin" ? "/admin" : "/student")}
+              onClick={() => router.push(role === "admin" ? "/admin" : "/user")}
               className="bg-red-900 text-white text-lg rounded-md px-6 py-2 transition-transform ease-in-out duration-200 hover:scale-105"
             >
               Sign In

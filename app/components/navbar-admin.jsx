@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <>
       {/* ✅ Top navbar (fixed) */}
-      <header className="fixed top-0 left-56 right-0 h-16 bg-white border-b border-gray-200 z-40 flex items-center px-4">
+      <header className="fixed top-0 left-44 right-0 h-16 bg-white border-b border-gray-200 z-40 flex items-center px-4">
         <div className="flex items-center font-bold text-2xl">
           <span className="bg-gradient-to-r from-red-800 to-red-700 bg-clip-text text-transparent">
             Concordia Booking System
@@ -37,19 +37,13 @@ export default function Navbar() {
               </svg>
             </button>
 
-            <div className="absolute right-0.5 top-full w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 invisible opacity-0 translate-y-1 pointer-events-none group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out">
+            <div className="absolute top-full w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-20 invisible opacity-0 translate-y-1 pointer-events-none group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out">
               <div className="py-1 flex flex-col">
                 <Link
-                  href="#"
+                  href="/admin/profile"
                   className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
                 >
                   Profile
-                </Link>
-                <Link
-                  href="#"
-                  className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
-                >
-                  Settings
                 </Link>
                 <Link
                   href="/"
@@ -64,7 +58,7 @@ export default function Navbar() {
       </header>
 
       {/* ✅ Fixed left sidebar (full height, non-scrolling) */}
-      <aside className="fixed top-0 left-0 h-screen w-56 bg-white flex flex-col z-50">
+      <aside className="fixed top-0 left-0 h-screen w-45 bg-white flex flex-col z-50">
         <div className="flex items-center justify-center h-16 border-b border-gray-100">
           <Image
             src="/UniversityLogo.png"
@@ -80,7 +74,7 @@ export default function Navbar() {
             {[
               { name: "Dashboard", path: "/admin" },
               { name: "Manage Bookings", path: "/admin/bookings" },
-              { name: "Set Reservation", path: "/admin/reservation" },
+              { name: "Add New Room", path: "/admin/add-room" },
               { name: "Reports/Statistics", path: "/admin/reports" },
             ].map((item) => (
               <li key={item.name}>
