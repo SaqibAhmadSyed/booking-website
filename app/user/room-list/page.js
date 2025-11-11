@@ -23,12 +23,12 @@ export default function RoomList() {
     { id: 1, type: "labs", name: "Lab10", image: "/img/Lab10.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["unavailable","unavailable","unavailable","unavailable","unavailable","available","available","available","available","available","unavailable","unavailable","unavailable"] },
     { id: 2, type: "labs", name: "Lab11", image: "/img/Lab11.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["available","available","available","available","available","available","available","unavailable","unavailable","unavailable","available","available","available"] },
     { id: 3, type: "studyrooms", name: "Study Room A", image: "/img/room101.jpg", capacity: 4, location: "SGW Library", schedule: ["available","available","booked","available","available","available","unavailable","available","available","available","available","available","available"] },
-    { id: 4, type: "studyrooms", name: "Study Room B", image: "/img/room102.jpg", capacity: 6, location: "Loyola Library", schedule: ["available","unavailable","available","available","available","available","available","available","booked","available","available","available","available"] },
+    { id: 4, type: "studyrooms", name: "Study Room B", image: "/img/room102.png", capacity: 6, location: "Loyola Library", schedule: ["available","unavailable","available","available","available","available","available","available","booked","available","available","available","available"] },
     { id: 5, type: "sports", name: "Basketball Court", image: "/img/BBCourt.jpg", capacity: 12, location: "Sports Complex", schedule: ["available","available","available","available","booked","booked","available","available","available","available","available","available","available"] },
     { id: 6, type: "sports", name: "Tennis Court", image: "/img/TennisSet.jpg", capacity: 4, location: "Sports Complex", schedule: ["unavailable","available","available","available","available","available","available","booked","available","available","available","available","available"] }
   ];
 
-  // Duplicate data for demo
+  // Duplicate data for demos/extras (We will change those later)
   const rooms = [
     ...baseRooms,
     ...baseRooms.map(r => ({ ...r, id: r.id + 10, name: r.name + " Demo" })),
@@ -114,7 +114,7 @@ export default function RoomList() {
               ))}
             </div>
 
-            {/* Right Column - Schedule Grid */}
+            {/* Schedule Grid */}
             <div className="flex-1 overflow-x-auto">
               <div className="flex bg-gray-100 border-b border-gray-200">
                 {timeSlots.map((time, index) => (
