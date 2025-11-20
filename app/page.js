@@ -2,18 +2,53 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 
-/**
- * Home page component - Landing page with login form
- * Features:
- * - Role selection (Student/Admin)
- * - Login form with email, student ID, and password
- * - Remember me functionality
- * - Navigation to appropriate dashboard based on role
- */
 export default function Home() {
-  const [role, setRole] = useState("student");
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+        setLoading(false);
+        return;
+      }
+
+      // Get the session to check user role
+      const response = await fetch("/api/auth/session");
+      const session = await response.json();
+
+      // Redirect based on actual user role from database
+      if (session?.user?.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/user");
+      }
+      router.refresh();
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred. Please try again.");
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-100 text-black font-roboto text-[15px] font-normal">
@@ -21,7 +56,7 @@ export default function Home() {
         id="login-box"
         className="flex flex-col items-center justify-center bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md"
       >
-        <div className="flex flex-col gap-4 w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
           {/* Logo */}
           <div className="flex flex-col items-center">
             <Image
@@ -38,6 +73,13 @@ export default function Home() {
             Concordia Booking System
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+              {error}
+            </div>
+          )}
+
           {/* Email */}
           <div className="flex flex-col gap-2">
             <label htmlFor="email" className="font-semibold">
@@ -46,19 +88,10 @@ export default function Home() {
             <input
               id="email"
               type="email"
-              className="border border-gray-400 rounded-md p-2 w-full"
-            />
-          </div>
-
-          {/* Student ID */}
-          <div className="flex flex-col gap-2">
-            <label htmlFor="studentID" className="font-semibold">
-              Student ID:
-            </label>
-            <input
-              id="studentID"
-              type="text"
-              className="border border-gray-400 rounded-md p-2 w-full"
+              className="border border-gray-400 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-red-900"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -70,30 +103,22 @@ export default function Home() {
             <input
               id="password"
               type="password"
-              className="border border-gray-400 rounded-md p-2 w-full"
+              className="border border-gray-400 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-red-900"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
-          </div>
-
-          {/* Role Select */}
-          <div id="user-admin" className="flex flex-col gap-2">
-            <label htmlFor="admin-login" className="font-semibold">
-              Log in as:
-            </label>
-            <select
-              id="admin-login"
-              name="admin-login"
-              className="border border-gray-400 rounded-md p-2"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
 
           {/* Remember Me */}
           <div id="remember-me-button" className="flex items-center gap-2">
-            <input type="checkbox" id="remember-me" />
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              className="w-4 h-4 text-red-900 border-gray-300 rounded focus:ring-red-900"
+            />
             <label htmlFor="remember-me" className="text-sm">
               Remember me next time
             </label>
@@ -102,22 +127,24 @@ export default function Home() {
           {/* Sign In Button */}
           <div className="flex justify-center">
             <button
-              type="button"
-              onClick={() => router.push(role === "admin" ? "/admin" : "/user")}
-              className="bg-red-900 text-white text-lg rounded-md px-6 py-2 transition-transform ease-in-out duration-200 hover:scale-105"
+              type="submit"
+              disabled={loading}
+              className={`bg-red-900 text-white text-lg rounded-md px-6 py-2 transition-transform ease-in-out duration-200 hover:scale-105 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </div>
 
           {/* Signup Link */}
           <p className="text-sm text-center">
             Don&apos;t have an account yet?{" "}
-            <a href="signup" className="text-blue-600 underline">
+            <Link href="/signup" className="text-blue-600 underline">
               Create one!
-            </a>
+            </Link>
           </p>
-        </div>
+        </form>
       </div>
     </main>
   );
