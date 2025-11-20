@@ -86,9 +86,9 @@ deploy on [vercel.com](https://vercel.com/home)
 ---
 # Used Tools/Libraries
 
-Prisma: [prismadb](https://www.prisma.io/) is an orm used to communicate between the backend and the database
-Supabase: [supabase](https://supabase.com/) uses PostgresSQL as language to hold data in the database
-Authjs: [authjs](https://authjs.dev/) is our main authentication tool 
+Prisma: [prismadb](https://www.prisma.io/) is an orm used to communicate between the backend and the database <br />
+Supabase: [supabase](https://supabase.com/) uses PostgresSQL as language to hold data in the database <br />
+Authjs: [authjs](https://authjs.dev/) is our main authentication tool <br />
 
 Graphs: [apexcharts](https://apexcharts.com/) 
 ```bash
