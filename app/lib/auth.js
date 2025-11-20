@@ -1,4 +1,3 @@
-// lib/auth.js
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./db.js";
 import Credentials from "next-auth/providers/credentials";
@@ -6,11 +5,10 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
-  pages: {
-    signIn: "/",
-  },
+  pages: { signIn: "/" },
   session: {
-    strategy: "jwt", // Use JWT strategy for sessions (encrypted in cookies)
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
     Credentials({
@@ -21,28 +19,19 @@ export const authOptions = {
       authorize: async (credentials) => {
         const email = credentials?.email?.trim();
         const password = credentials?.password;
-        if (!email || !password) {
-          console.log("Missing email or password");
-          return null;
-        }
 
-        const existingUser = await prisma.user.findUnique({
-          where: { email },
-        });
-        console.log("existingUser found:", existingUser ? { id: existingUser.id, email: existingUser.email, hasPassword: !!existingUser.password } : null);
+        if (!email || !password) return null;
 
+        const existingUser = await prisma.user.findUnique({ where: { email } });
         if (!existingUser || !existingUser.password) return null;
 
         const passwordMatch = await bcrypt.compare(password, existingUser.password);
-        console.log("passwordMatch:", passwordMatch);
         if (!passwordMatch) return null;
 
         return {
           id: existingUser.id.toString(),
           email: existingUser.email,
-          name:
-            existingUser.name ||
-            `${existingUser.first_name} ${existingUser.last_name}`,
+          name: existingUser.name || `${existingUser.first_name} ${existingUser.last_name}`,
           role: existingUser.role,
           student_id: existingUser.student_id?.toString(),
         };
@@ -59,11 +48,9 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id;
-        session.user.role = token.role;
-        session.user.student_id = token.student_id;
-      }
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.student_id = token.student_id;
       return session;
     },
   },

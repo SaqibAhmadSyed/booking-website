@@ -13,15 +13,17 @@ import { useEffect } from "react";
  * - Footer component
  * - Left padding to accommodate sidebar
  */
+
 export default function AdminLayout({ children }) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === "unauthenticated") {
+      // Not logged in at all → go to login
       router.push("/");
     } else if (status === "authenticated" && session?.user?.role !== "admin") {
-      // If user is authenticated but not admin, redirect to user page
+      // Logged in but not admin → go to user page
       router.push("/user");
     }
   }, [status, session, router]);
@@ -37,7 +39,6 @@ export default function AdminLayout({ children }) {
   if (!session || session.user.role !== "admin") {
     return null;
   }
-
   return (
     <main className="pl-56 pt-16 min-h-screen bg-slate-50">
       <Navbar />

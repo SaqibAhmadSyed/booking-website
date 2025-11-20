@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import BarChart from "@/app/components/bar-chart";
-import PieChart from "@/app/components/pie-chart";
-import RadarChart from "@/app/components/radar-chart";
+import BarChart from "../../components/bar-chart";
+import PieChart from "../../components/pie-chart";
+import RadarChart from "../../components/radar-chart";
 
 /**
  * Admin reports page - Analytics and statistics dashboard
