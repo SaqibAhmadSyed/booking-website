@@ -84,7 +84,11 @@ npm run build
 ```
 deploy on [vercel.com](https://vercel.com/home) 
 ---
-# Used Libraries
+# Used Tools/Libraries
+
+Prisma: [prismadb](https://www.prisma.io/) is an orm used to communicate between the backend and the database
+Supabase: [supabase](https://supabase.com/) uses PostgresSQL as language to hold data in the database
+Authjs: [authjs](https://authjs.dev/) is our main authentication tool 
 
 Graphs: [apexcharts](https://apexcharts.com/) 
 ```bash
