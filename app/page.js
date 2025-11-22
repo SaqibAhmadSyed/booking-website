@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import LoadingSpinner from "../app/components/loading-spinner.jsx"; // import your spinner
 
 export default function Home() {
   const router = useRouter();
@@ -22,9 +23,9 @@ export default function Home() {
     }
   }, [status, session, router]);
 
-  //TODO: Improve loading state design
+  // Show spinner while checking session
   if (status === "loading" || session) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <LoadingSpinner fullScreen message="Loading your session..." />;
   }
 
   const handleSubmit = async (e) => {
@@ -46,7 +47,9 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-100 text-black font-roboto text-[15px] font-normal">
+    <main className="min-h-screen flex items-center justify-center bg-slate-100 text-black font-roboto text-[15px] font-normal relative">
+      {loading && <LoadingSpinner fullScreen message="Signing you in..." />}
+
       <div className="flex flex-col items-center justify-center bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
           <div className="flex flex-col items-center">

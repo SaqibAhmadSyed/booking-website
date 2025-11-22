@@ -38,12 +38,11 @@ model User {
   updated_at    DateTime  @updatedAt
   @@map("users")
 }
+
 // model Building {
 //   id            BigInt   @id @default(autoincrement())
 //   building_name String
-//   building_code String   @unique
 //   address       String?
-//   total_floors  Int?
 //   created_at    DateTime @default(now())
 
 //   schedules     Resource_Schedule[]
@@ -60,14 +59,14 @@ model User {
 //   image_url    String?
 //   is_available Boolean   @default(true)
 
-//   schedules   Resource_Schedule[]
-//   blackout    Blackout_Date[]
-//   bookings    Booking[]
-//   hourlyStats Hourly_Statistics[]
-//   weeklyStats Weekly_Statistics[]
-//   statusStats Status_Statistics[]
-//   buildingUse Building_Statistics[] @relation("MostBookedResource")
-// }
+  // schedules   Resource_Schedule[]
+  // blackout    Blackout_Date[]
+  // bookings    Booking[]
+  // hourlyStats Hourly_Statistics[]
+  // weeklyStats Weekly_Statistics[]
+  // statusStats Status_Statistics[]
+  // buildingUse Building_Statistics[] @relation("MostBookedResource")
+}
 
 // // ---------------------------------------------
 // // SCHEDULE
