@@ -1,15 +1,8 @@
 import "./globals.css";
-import { Inter, Montserrat } from "next/font/google";
+import { Inter } from "next/font/google";
+import { Providers } from "./lib/provider";
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata = {
   title: "University Resource Booking System",
@@ -20,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
       <body className="flex-grow flex flex-col">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

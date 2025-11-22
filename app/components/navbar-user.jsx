@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
 
 /**
  * User navigation component - Top navigation bar for user interface
@@ -13,19 +14,20 @@ import Image from "next/image";
  * - Hover effects and smooth transitions
  */
 export default function Navbar() {
+  const { data: session } = useSession();
   return (
     <>
       {/* ✅ Top navbar (fixed) */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-40 flex items-center px-6">
         <div className="flex items-center font-bold text-2xl">
           <div className="">
-          <Image
-            src="/UniversityLogo.png"
-            alt="logo"
-            width={170}
-            height={200}
-            priority
-          />
+            <Image
+              src="/UniversityLogo.png"
+              alt="logo"
+              width={170}
+              height={200}
+              priority
+            />
           </div>
         </div>
 
@@ -50,7 +52,13 @@ export default function Navbar() {
         <div className="ml-auto relative group">
           <button className="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-gray-100">
             <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-700">
-              A
+              {session?.user?.name
+                ? `${session.user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}`
+                : ""}
             </span>
             <span className="text-sm text-gray-700 font-medium">Account</span>
             <svg
@@ -76,12 +84,12 @@ export default function Navbar() {
               >
                 Profile
               </Link>
-              <Link
-                href="/"
-                className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="inline-flex px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
               >
                 Logout
-              </Link>
+              </button>
             </div>
           </div>
         </div>

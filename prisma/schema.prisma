@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+// ---------------------------------------------
+// ENUMS
+// ---------------------------------------------
+enum UserRole {
+  user
+  admin
+}
+
+enum BookingStatus {
+  pending
+  approved
+  rejected
+  cancelled
+}
+
+// ---------------------------------------------
+// MODELS
+// ---------------------------------------------
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?   // For credentials login
+  role          UserRole  @default(user)
+  first_name    String?
+  last_name     String?
+  student_id    BigInt?   @unique
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  @@map("users")
+}
+// model Building {
+//   id            BigInt   @id @default(autoincrement())
+//   building_name String
+//   building_code String   @unique
+//   address       String?
+//   total_floors  Int?
+//   created_at    DateTime @default(now())
+
+//   schedules     Resource_Schedule[]
+//   stats         Building_Statistics[]
+// }
+
+// model Resource {
+//   id           BigInt   @id @default(autoincrement())
+//   name         String
+//   description  String?
+//   type         String?
+//   location     String?
+//   capacity     Int?
+//   image_url    String?
+//   is_available Boolean   @default(true)
+
+//   schedules   Resource_Schedule[]
+//   blackout    Blackout_Date[]
+//   bookings    Booking[]
+//   hourlyStats Hourly_Statistics[]
+//   weeklyStats Weekly_Statistics[]
+//   statusStats Status_Statistics[]
+//   buildingUse Building_Statistics[] @relation("MostBookedResource")
+// }
+
+// // ---------------------------------------------
+// // SCHEDULE
+// // ---------------------------------------------
+// model Resource_Schedule {
+//   id             BigInt   @id @default(autoincrement())
+//   resource_id    BigInt
+//   building_id    BigInt
+//   room_number    String?
+//   day_of_week    Int
+//   start_time     DateTime
+//   end_time       DateTime
+//   effective_from Date?
+//   effective_until Date?
+
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+//   building Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // BLACKOUT DATES
+// // ---------------------------------------------
+// model Blackout_Date {
+//   id          BigInt   @id @default(autoincrement())
+//   resource_id BigInt
+//   date        Date
+//   reason      String?
+//   created_at  DateTime @default(now())
+
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // BOOKINGS
+// // ---------------------------------------------
+// model Booking {
+//   id                 BigInt   @id @default(autoincrement())
+//   user_id            BigInt
+//   resource_id        BigInt
+//   date               Date
+//   day_of_week        Int
+//   week_num           Int?
+//   start_time         DateTime
+//   end_time           DateTime
+//   purpose            String?
+//   status             BookingStatus @default(pending)
+//   cancelation_reason String?
+//   created_at         DateTime @default(now())
+
+//   user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // HOURLY STATISTICS
+// // ---------------------------------------------
+// model Hourly_Statistics {
+//   id                     BigInt   @id @default(autoincrement())
+//   resource_id            BigInt
+//   booking_hour           Int
+//   stat_date              Date
+//   total_bookings         Int      @default(0)
+//   total_duration_minutes Int      @default(0)
+//   unique_users           Int      @default(0)
+//   created_at             DateTime @default(now())
+
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // WEEKLY STATISTICS
+// // ---------------------------------------------
+// model Weekly_Statistics {
+//   id                   BigInt   @id @default(autoincrement())
+//   resource_id          BigInt
+//   year                 Int
+//   week_number          Int
+//   week_start_date      Date
+//   total_bookings       Int      @default(0)
+//   total_hours          Int      @default(0)
+//   unique_users         Int      @default(0)
+//   avg_booking_duration Int      @default(0)
+//   created_at           DateTime @default(now())
+
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // STATUS STATISTICS
+// // ---------------------------------------------
+// model Status_Statistics {
+//   id                BigInt   @id @default(autoincrement())
+//   resource_id       BigInt
+//   stat_date         Date
+//   pending_count     Int      @default(0)
+//   approved_count    Int      @default(0)
+//   rejected_count    Int      @default(0)
+//   cancelled_count   Int      @default(0)
+//   approval_rate     Float?
+//   cancellation_rate Float?
+//   created_at        DateTime @default(now())
+
+//   resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+// }
+
+// // ---------------------------------------------
+// // BUILDING STATISTICS
+// // ---------------------------------------------
+// model Building_Statistics {
+//   id                      BigInt   @id @default(autoincrement())
+//   building_id             BigInt
+//   stat_date               Date
+//   total_rooms_booked      Int      @default(0)
+//   total_bookings          Int      @default(0)
+//   total_hours             Int      @default(0)
+//   unique_users            Int      @default(0)
+//   occupancy_rate          Float?
+//   most_booked_resource_id BigInt?
+//   created_at              DateTime @default(now())
+
+//   building Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
+//   resource Resource? @relation("MostBookedResource", fields: [most_booked_resource_id], references: [id])
+// }
