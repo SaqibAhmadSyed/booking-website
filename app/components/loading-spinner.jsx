@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function LoadingSpinner({ 
-  size = "md", 
-  color = "red", 
+export default function LoadingSpinner({
+  size = "md",
+  color = "red",
   fullScreen = false,
   message = "",
-  inline = false // for button usage
+  inline = false,
 }) {
   const Spinner = () => {
     const sizeClasses = {
@@ -25,18 +25,20 @@ export default function LoadingSpinner({
 
     return (
       <div
-        className={`animate-spin rounded-full ${sizeClasses[size]} ${colorClasses[color]}`}
+        className={`animate-spin rounded-full border-solid ${sizeClasses[size]} ${colorClasses[color]}`}
       />
     );
   };
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
-        <div className="flex flex-col items-center">
+      <div className="fixed inset-0 bg-transparent flex items-center justify-center z-50">
+        <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center">
           <Spinner />
           {message && (
-            <p className="mt-4 text-gray-700 font-medium text-center">{message}</p>
+            <p className="mt-4 text-gray-700 font-medium text-center">
+              {message}
+            </p>
           )}
         </div>
       </div>
@@ -44,7 +46,6 @@ export default function LoadingSpinner({
   }
 
   if (inline) {
-    // Inline spinner for buttons: absolute right inside parent
     return (
       <div className="absolute right-3 top-1/2 -translate-y-1/2">
         <Spinner />

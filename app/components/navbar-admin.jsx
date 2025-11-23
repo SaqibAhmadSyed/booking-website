@@ -1,23 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 
-/**
- * Admin navigation component - Sidebar navigation for admin interface
- * Features:
- * - Fixed sidebar with university logo
- * - Navigation menu for admin functions
- * - Account dropdown with profile and logout
- * - Responsive design with proper z-indexing
- * - Hover effects and smooth transitions
- */
 export default function Navbar() {
   const { data: session } = useSession();
+  
   return (
     <>
-      {/* ✅ Top navbar (fixed) */}
       <header className="fixed top-0 left-44 right-0 h-16 bg-white border-b border-gray-200 z-40 flex items-center px-4">
         <div className="flex items-center font-bold text-2xl">
           <span className="bg-gradient-to-r from-red-800 to-red-700 bg-clip-text text-transparent">
@@ -26,18 +17,26 @@ export default function Navbar() {
         </div>
 
         <div className="ml-auto flex">
-          {/* Account menu */}
           <div className="relative group">
             <button className="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-gray-100">
-              <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-700">
-                {session?.user?.name
-                  ? `${session.user.name
-                      .split(" ")
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                {session?.user?.image ? (
+                  <img
+                    src={session.user.image}
+                    alt="Profile"
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <span className="text-sm text-gray-700 font-bold">
+                    {session?.user?.name
+                      ?.split(" ")
                       .map((n) => n[0])
                       .join("")
-                      .toUpperCase()}`
-                  : ""}
-              </span>
+                      .toUpperCase() || "U"}
+                  </span>
+                )}
+              </div>
+
               <span className="text-sm text-gray-700 font-medium">Account</span>
               <svg
                 className="w-4 h-4 transform transition-transform group-hover:rotate-180"
@@ -63,19 +62,20 @@ export default function Navbar() {
                   Profile
                 </Link>
 
-              <button
-                onClick={() => signOut({ callbackUrl: `${window.location.origin}/` })}
-                className="inline-flex px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
-              >
-                Logout
-              </button>
+                <button
+                  onClick={() =>
+                    signOut({ callbackUrl: `${window.location.origin}/` })
+                  }
+                  className="inline-flex px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg m-1"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ✅ Fixed left sidebar (full height, non-scrolling) */}
       <aside className="fixed top-0 left-0 h-screen w-45 bg-white flex flex-col z-50">
         <div className="flex items-center justify-center h-16 border-b border-gray-100">
           <Image

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import ViewModal from "@/app/components/view-modal";
+import ViewModal from "../../components/view-modal";
 
 /**
  * User booking history page - Displays past and current bookings
