@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../../components/loading-spinner"; // Adjust path as needed
+import { useSession } from "next-auth/react";
 
 export default function ProfilePageLayout() {
+  const { data: session, update } = useSession();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -84,6 +86,29 @@ export default function ProfilePageLayout() {
   };
 
   const handleSaveChanges = async () => {
+    // ✅ VALIDATION - Check if required fields are filled
+    if (!formData.firstName.trim()) {
+      setMessage({ type: "error", text: "First name is required" });
+      return;
+    }
+
+    if (!formData.lastName.trim()) {
+      setMessage({ type: "error", text: "Last name is required" });
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setMessage({ type: "error", text: "Email is required" });
+      return;
+    }
+
+    // ✅ Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage({ type: "error", text: "Please enter a valid email address" });
+      return;
+    }
+
     setIsSaving(true);
     setMessage({ type: "", text: "" });
 
@@ -110,15 +135,22 @@ export default function ProfilePageLayout() {
         setIsUploading(false);
       }
 
+      // Only include imageUrl if a new image was uploaded
+      const updatePayload = {
+        firstName: formData.firstName.trim(), // ✅ Trim whitespace
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+      };
+
+      // Only add imageUrl to payload if it exists
+      if (imageUrl) {
+        updatePayload.imageUrl = imageUrl;
+      }
+
       const updateRes = await fetch("/api/profile/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          imageUrl,
-        }),
+        body: JSON.stringify(updatePayload),
       });
 
       if (!updateRes.ok) {
@@ -134,6 +166,16 @@ export default function ProfilePageLayout() {
       if (imageUrl) {
         setCurrentImageUrl(imageUrl);
       }
+
+      // UPDATE SESSION
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          name: `${formData.firstName} ${formData.lastName}`,
+          image: imageUrl || currentImageUrl,
+        },
+      });
     } catch (err) {
       setMessage({ type: "error", text: err.message });
     } finally {
@@ -197,8 +239,8 @@ export default function ProfilePageLayout() {
   }
 
   return (
-    <main className="p-6 min-h-[auto] bg-gray-50">
-      <div className="mb-8">
+    <main className="p-6 bg-gray-50">
+      <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-gray-900">
           Edit Profile Information
         </h1>

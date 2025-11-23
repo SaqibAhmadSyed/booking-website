@@ -15,6 +15,7 @@ import { useSession, signOut } from "next-auth/react";
  */
 export default function Navbar() {
   const { data: session } = useSession();
+  console.log(session.user.image)
   return (
     <>
       {/* ✅ Top navbar (fixed) */}
@@ -51,15 +52,25 @@ export default function Navbar() {
         {/* Account menu */}
         <div className="ml-auto relative group">
           <button className="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-gray-100">
-            <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-700">
-              {session?.user?.name
-                ? `${session.user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()}`
-                : ""}
-            </span>
+              <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                {session?.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <span className="text-sm text-gray-700 font-bold">
+                    {session?.user?.name
+                      ?.split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()}
+                  </span>
+                )}
+              </div>
             <span className="text-sm text-gray-700 font-medium">Account</span>
             <svg
               className="w-4 h-4 transform transition-transform group-hover:rotate-180"

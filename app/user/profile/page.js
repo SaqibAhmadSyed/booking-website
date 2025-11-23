@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../../components/loading-spinner"; // Adjust path as needed
+import { useSession } from "next-auth/react";
 
 export default function ProfilePageLayout() {
+  const { data: session, update } = useSession();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -62,7 +64,10 @@ export default function ProfilePageLayout() {
 
     const validTypes = ["image/jpeg", "image/png", "image/gif"];
     if (!validTypes.includes(file.type)) {
-      setMessage({ type: "error", text: "Please select a JPG, PNG, or GIF image" });
+      setMessage({
+        type: "error",
+        text: "Please select a JPG, PNG, or GIF image",
+      });
       return;
     }
 
@@ -80,65 +85,104 @@ export default function ProfilePageLayout() {
     setMessage({ type: "", text: "" });
   };
 
-  const handleSaveChanges = async () => {
-    setIsSaving(true);
-    setMessage({ type: "", text: "" });
+const handleSaveChanges = async () => {
+  // ✅ VALIDATION - Check if required fields are filled
+  if (!formData.firstName.trim()) {
+    setMessage({ type: "error", text: "First name is required" });
+    return;
+  }
 
-    try {
-      let imageUrl = null;
+  if (!formData.lastName.trim()) {
+    setMessage({ type: "error", text: "Last name is required" });
+    return;
+  }
 
-      if (profileImage) {
-        setIsUploading(true);
-        const fd = new FormData();
-        fd.append("file", profileImage);
+  if (!formData.email.trim()) {
+    setMessage({ type: "error", text: "Email is required" });
+    return;
+  }
 
-        const uploadRes = await fetch("/api/profile/upload", {
-          method: "POST",
-          body: fd,
-        });
+  // ✅ Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    setMessage({ type: "error", text: "Please enter a valid email address" });
+    return;
+  }
 
-        if (!uploadRes.ok) {
-          const err = await uploadRes.json();
-          throw new Error(err.error || "Image upload failed");
-        }
+  setIsSaving(true);
+  setMessage({ type: "", text: "" });
 
-        const result = await uploadRes.json();
-        imageUrl = result.imageUrl;
-        setIsUploading(false);
-      }
+  try {
+    let imageUrl = null;
 
-      const updateRes = await fetch("/api/profile/update", {
+    if (profileImage) {
+      setIsUploading(true);
+      const fd = new FormData();
+      fd.append("file", profileImage);
+
+      const uploadRes = await fetch("/api/profile/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          imageUrl,
-        }),
+        body: fd,
       });
 
-      if (!updateRes.ok) {
-        const err = await updateRes.json();
-        throw new Error(err.error || "Profile update failed");
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json();
+        throw new Error(err.error || "Image upload failed");
       }
 
-      setMessage({ type: "success", text: "Profile updated successfully!" });
-
-      setProfileImage(null);
-      setImagePreview(null);
-
-      if (imageUrl) {
-        setCurrentImageUrl(imageUrl);
-      }
-
-    } catch (err) {
-      setMessage({ type: "error", text: err.message });
-    } finally {
-      setIsSaving(false);
+      const result = await uploadRes.json();
+      imageUrl = result.imageUrl;
       setIsUploading(false);
     }
-  };
+
+    // Only include imageUrl if a new image was uploaded
+    const updatePayload = {
+      firstName: formData.firstName.trim(), // ✅ Trim whitespace
+      lastName: formData.lastName.trim(),
+      email: formData.email.trim(),
+    };
+
+    // Only add imageUrl to payload if it exists
+    if (imageUrl) {
+      updatePayload.imageUrl = imageUrl;
+    }
+
+    const updateRes = await fetch("/api/profile/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatePayload),
+    });
+
+    if (!updateRes.ok) {
+      const err = await updateRes.json();
+      throw new Error(err.error || "Profile update failed");
+    }
+
+    setMessage({ type: "success", text: "Profile updated successfully!" });
+
+    setProfileImage(null);
+    setImagePreview(null);
+
+    if (imageUrl) {
+      setCurrentImageUrl(imageUrl);
+    }
+
+    // UPDATE SESSION
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        name: `${formData.firstName} ${formData.lastName}`,
+        image: imageUrl || currentImageUrl,
+      },
+    });
+  } catch (err) {
+    setMessage({ type: "error", text: err.message });
+  } finally {
+    setIsSaving(false);
+    setIsUploading(false);
+  }
+};
 
   const handleChangePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -146,7 +190,10 @@ export default function ProfilePageLayout() {
       return;
     }
     if (passwordData.newPassword.length < 6) {
-      setMessage({ type: "error", text: "Password must be at least 6 characters" });
+      setMessage({
+        type: "error",
+        text: "Password must be at least 6 characters",
+      });
       return;
     }
 
@@ -172,7 +219,6 @@ export default function ProfilePageLayout() {
         setShowPasswordForm(false);
         setMessage({ type: "", text: "" });
       }, 2000);
-
     } catch (err) {
       setMessage({ type: "error", text: err.message });
     } finally {
@@ -193,10 +239,14 @@ export default function ProfilePageLayout() {
   }
 
   return (
-    <main className="p-6 min-h-screen bg-gray-50">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Profile Information</h1>
-        <p className="text-gray-600 mt-1">Update your personal details and profile photo</p>
+    <main className="p-6 bg-gray-50">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Edit Profile Information
+        </h1>
+        <p className="text-gray-600 mt-1">
+          Update your personal details and profile photo
+        </p>
       </div>
 
       {message.text && (
@@ -215,16 +265,24 @@ export default function ProfilePageLayout() {
         {/* Profile Photo Section */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-md p-6 sticky top-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Profile Photo</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">
+              Profile Photo
+            </h2>
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <div className="w-40 h-40 rounded-full bg-gradient-to-br from-red-400 to-red-600 p-1 shadow-lg">
                   <div className="w-full h-full rounded-full bg-white p-1">
                     <div className="w-full h-full rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                       {displayedImage ? (
-                        <img src={displayedImage} alt="Profile" className="w-full h-full object-cover" />
+                        <img
+                          src={displayedImage}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <span className="text-5xl font-bold text-gray-400">{getInitials()}</span>
+                        <span className="text-5xl font-bold text-gray-400">
+                          {getInitials()}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -234,9 +292,24 @@ export default function ProfilePageLayout() {
                   className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-50 rounded-full transition-all cursor-pointer opacity-0 group-hover:opacity-100"
                 >
                   <div className="text-center">
-                    <svg className="w-8 h-8 text-white mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-8 h-8 text-white mx-auto mb-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                     <p className="text-white text-sm font-medium">Change</p>
                   </div>
@@ -256,7 +329,7 @@ export default function ProfilePageLayout() {
               >
                 {profileImage ? "Change Photo" : "Choose New Photo"}
               </label>
-              
+
               {profileImage && (
                 <button
                   onClick={() => {
@@ -271,7 +344,9 @@ export default function ProfilePageLayout() {
               )}
 
               <div className="mt-6 p-4 bg-gray-50 rounded-lg w-full text-xs text-gray-500">
-                <p className="mb-1 font-medium text-gray-600">Photo Guidelines:</p>
+                <p className="mb-1 font-medium text-gray-600">
+                  Photo Guidelines:
+                </p>
                 <ul className="space-y-1">
                   <li>• JPG, PNG or GIF format</li>
                   <li>• Maximum size: 5MB</li>
@@ -288,14 +363,32 @@ export default function ProfilePageLayout() {
           <div className="bg-white rounded-xl shadow-md p-8">
             {!showPasswordForm ? (
               <>
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Personal Information</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Personal Information
+                </h2>
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <InputField label="First Name" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-                    <InputField label="Last Name" name="lastName" value={formData.lastName} onChange={handleInputChange} />
+                    <InputField
+                      label="First Name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                    />
+                    <InputField
+                      label="Last Name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                    />
                   </div>
 
-                  <InputField label="Email Address" name="email" type="email" value={formData.email} onChange={handleInputChange} />
+                  <InputField
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
 
                   <div className="border-t border-gray-200 my-6"></div>
 
@@ -310,24 +403,40 @@ export default function ProfilePageLayout() {
                     >
                       Change Password
                     </button>
-
                     <button
                       onClick={handleSaveChanges}
                       disabled={isSaving || isUploading}
-                      className="w-full sm:w-auto px-8 py-3 bg-red-800 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-8 py-3 bg-red-800 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed relative"
                     >
-                      {isUploading ? <LoadingSpinner size="sm" color="white" /> : isSaving ? <LoadingSpinner size="sm" color="white" /> : "Save Changes"}
+                      Save Changes
+                      {(isSaving || isUploading) && (
+                        <LoadingSpinner size="sm" color="white" inline />
+                      )}
                     </button>
                   </div>
                 </div>
               </>
             ) : (
               <>
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Change Password</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Change Password
+                </h2>
 
                 <div className="space-y-6">
-                  <InputField label="New Password" name="newPassword" type="password" value={passwordData.newPassword} onChange={handlePasswordChange} />
-                  <InputField label="Confirm New Password" name="confirmPassword" type="password" value={passwordData.confirmPassword} onChange={handlePasswordChange} />
+                  <InputField
+                    label="New Password"
+                    name="newPassword"
+                    type="password"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                  />
+                  <InputField
+                    label="Confirm New Password"
+                    name="confirmPassword"
+                    type="password"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                  />
 
                   <div className="border-t border-gray-200 my-6"></div>
 
@@ -336,7 +445,10 @@ export default function ProfilePageLayout() {
                       type="button"
                       onClick={() => {
                         setShowPasswordForm(false);
-                        setPasswordData({ newPassword: "", confirmPassword: "" });
+                        setPasswordData({
+                          newPassword: "",
+                          confirmPassword: "",
+                        });
                         setMessage({ type: "", text: "" });
                       }}
                       className="w-full sm:w-auto px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition shadow-md"
@@ -346,10 +458,18 @@ export default function ProfilePageLayout() {
 
                     <button
                       onClick={handleChangePassword}
-                      disabled={isSaving || !passwordData.newPassword || !passwordData.confirmPassword}
+                      disabled={
+                        isSaving ||
+                        !passwordData.newPassword ||
+                        !passwordData.confirmPassword
+                      }
                       className="w-full sm:w-auto px-8 py-3 bg-red-800 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSaving ? <LoadingSpinner size="sm" color="white" /> : "Update Password"}
+                      {isSaving ? (
+                        <LoadingSpinner size="sm" color="white" />
+                      ) : (
+                        "Update Password"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -364,7 +484,9 @@ export default function ProfilePageLayout() {
 
 const InputField = ({ label, type = "text", name, value, onChange }) => (
   <div>
-    <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+    <label className="block text-sm font-semibold text-gray-700 mb-2">
+      {label}
+    </label>
     <input
       type={type}
       name={name}
