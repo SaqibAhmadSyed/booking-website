@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ENUMS
@@ -39,61 +40,65 @@ enum ConcordiaBuilding {
 }
 
 // USERS
-model User {
+model user {
   id            String    @id @default(cuid())
-  name          String?
+  name          String
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  password      String?
+  password      String
   role          UserRole  @default(user)
-  first_name    String?
-  last_name     String?
-  student_id    BigInt?   @unique
+  first_name    String
+  last_name     String
+  student_id    BigInt    @unique
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 
-  bookings Booking[]
+  bookings booking[]
 
   @@map("users")
 }
 
 // RESOURCE SCHEDULE
-model Resource_Schedule {
+model resource_schedule {
   id              BigInt            @id @default(autoincrement())
   resource_id     String
   building        ConcordiaBuilding
-  room_number     String?
+  room_number     String
   day_of_week     Int
   start_time      DateTime
   end_time        DateTime
   effective_from  DateTime?
   effective_until DateTime?
 
-  resource Resource @relation(fields: [resource_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }
 
 // RESOURCE
-model Resource {
-  id        String            @id @default(cuid())
-  name      String
-  type      String
-  location  ConcordiaBuilding
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+model resource {
+  id          String   @id @default(cuid())
+  name        String
+  location    String
+  type        String
+  capacity    Int
+  amenities   String[]
+  description String?
+  image    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  schedules     Resource_Schedule[]
-  bookings      Booking[]
-  hourlyStats   Hourly_Statistics[]
-  weeklyStats   Weekly_Statistics[]
-  statusStats   Status_Statistics[]
-  blackoutDates Blackout_Date[]
-  buildingStats Building_Statistics[]
-  mostBookedIn  Building_Statistics[] @relation("MostBookedResource")
+  schedules     resource_schedule[]
+  bookings      booking[]
+  hourlyStats   hourly_statistics[]
+  weeklyStats   weekly_statistics[]
+  statusStats   status_statistics[]
+  blackoutDates blackout_date[]
+  buildingStats building_statistics[]
+  mostBookedIn  building_statistics[] @relation("mostBookedResource")
 }
 
 // BUILDING STATISTICS
-model Building_Statistics {
+model building_statistics {
   id                      BigInt            @id @default(autoincrement())
   building                ConcordiaBuilding
   stat_date               DateTime
@@ -106,12 +111,12 @@ model Building_Statistics {
   resource_id             String?
   created_at              DateTime          @default(now())
 
-  resource           Resource? @relation(fields: [resource_id], references: [id])
-  mostBookedResource Resource? @relation("MostBookedResource", fields: [most_booked_resource_id], references: [id])
+  resource           resource? @relation(fields: [resource_id], references: [id])
+  mostBookedResource resource? @relation("mostBookedResource", fields: [most_booked_resource_id], references: [id])
 }
 
 // BOOKING
-model Booking {
+model booking {
   id                 BigInt        @id @default(autoincrement())
   user_id            String
   resource_id        String
@@ -125,12 +130,12 @@ model Booking {
   cancelation_reason String?
   created_at         DateTime      @default(now())
 
-  user     User     @relation(fields: [user_id], references: [id])
-  resource Resource @relation(fields: [resource_id], references: [id])
+  user     user     @relation(fields: [user_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }
 
 // HOURLY STATISTICS
-model Hourly_Statistics {
+model hourly_statistics {
   id                     BigInt   @id @default(autoincrement())
   resource_id            String
   booking_hour           Int
@@ -140,11 +145,11 @@ model Hourly_Statistics {
   unique_users           Int      @default(0)
   created_at             DateTime @default(now())
 
-  resource Resource @relation(fields: [resource_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }
 
 // WEEKLY STATISTICS
-model Weekly_Statistics {
+model weekly_statistics {
   id                   BigInt   @id @default(autoincrement())
   resource_id          String
   year                 Int
@@ -156,11 +161,11 @@ model Weekly_Statistics {
   avg_booking_duration Int      @default(0)
   created_at           DateTime @default(now())
 
-  resource Resource @relation(fields: [resource_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }
 
 // STATUS STATISTICS
-model Status_Statistics {
+model status_statistics {
   id                BigInt   @id @default(autoincrement())
   resource_id       String
   stat_date         DateTime
@@ -172,16 +177,16 @@ model Status_Statistics {
   cancellation_rate Float?
   created_at        DateTime @default(now())
 
-  resource Resource @relation(fields: [resource_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }
 
 // BLACKOUT DATES
-model Blackout_Date {
+model blackout_date {
   id          BigInt   @id @default(autoincrement())
   resource_id String
   date        DateTime
   reason      String?
   created_at  DateTime @default(now())
 
-  resource Resource @relation(fields: [resource_id], references: [id])
+  resource resource @relation(fields: [resource_id], references: [id])
 }

@@ -119,6 +119,7 @@ const handleSaveChanges = async () => {
       setIsUploading(true);
       const fd = new FormData();
       fd.append("file", profileImage);
+      fd.append("oldImagePath", currentImagePath);
 
       const uploadRes = await fetch("/api/profile/upload", {
         method: "POST",

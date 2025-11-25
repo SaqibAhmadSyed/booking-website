@@ -1,8 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter, useParams } from "next/navigation";
 
-export default function AddRoom() {
+export default function EditRoom() {
+  const router = useRouter();
+  const params = useParams();
+  const roomId = params?.id;
+
   const AMENITIES = {
     conference: ["Projector", "Whiteboard", "Video Conferencing", "TV Screen"],
     meeting: ["Whiteboard", "Conference Phone", "WiFi"],
@@ -14,85 +19,170 @@ export default function AddRoom() {
     lecture: ["Projector", "Podium", "Whiteboard", "Microphones"],
   };
 
+  const [formData, setFormData] = useState({
+    name: "",
+    location: "",
+    capacity: "",
+    type: "",
+    description: "",
+  });
+  const [currentImage, setCurrentImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [roomType, setRoomType] = useState("");
+  const [newImageFile, setNewImageFile] = useState(null);
   const [amenities, setAmenities] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    if (roomId) {
+      fetchRoomData();
+    }
+  }, [roomId]);
+
+  const fetchRoomData = async () => {
+    try {
+      const res = await fetch(`/api/resource/get-room?id=${roomId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFormData({
+          name: data.room.name,
+          location: data.room.location,
+          capacity: data.room.capacity,
+          type: data.room.type,
+          description: data.room.description || "",
+        });
+        setCurrentImage(data.room.image);
+        setAmenities(data.room.amenities || []);
+      } else {
+        setMessage({ type: "error", text: "Failed to load room data" });
+      }
+    } catch (err) {
+      console.error("Error fetching room:", err);
+      setMessage({ type: "error", text: "Failed to load room data" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
         setMessage({ type: "error", text: "Image must be less than 5MB" });
         return;
       }
 
+      setNewImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
+      setMessage(null);
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTypeChange = (e) => {
+    const newType = e.target.value;
+    setFormData((prev) => ({ ...prev, type: newType }));
+    setAmenities(AMENITIES[newType] || []);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsSaving(true);
     setMessage(null);
 
-    const data = {
-      name: e.target.roomName.value,
-      location: e.target.location.value,
-      capacity: Number(e.target.capacity.value),
-      type: roomType,
-      amenities,
-      description: e.target.description.value,
-      image: imagePreview,
-    };
-
     try {
-      const res = await fetch("/api/resource/create-room", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      let base64Image = currentImage;
 
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.error || "Request failed");
+      // Convert new image to base64 if selected
+      if (newImageFile) {
+        base64Image = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(newImageFile);
+        });
       }
 
-      setMessage({ type: "success", text: "Room added successfully!" });
-      
-      // Reset form
-      e.target.reset();
-      setImagePreview(null);
-      setRoomType("");
-      setAmenities([]);
+      const updateData = {
+        id: roomId,
+        name: formData.name,
+        location: formData.location,
+        capacity: Number(formData.capacity),
+        type: formData.type,
+        amenities,
+        description: formData.description,
+        image: base64Image,
+      };
 
-      console.log("Room added:", json);
+      const res = await fetch("/api/resource/update-room", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to update room");
+      }
+
+      const json = await res.json();
+      setMessage({ type: "success", text: "Room updated successfully!" });
+      setCurrentImage(json.room.image);
+      setImagePreview(null);
+      setNewImageFile(null);
+
+      setTimeout(() => {
+        router.push("/admin/room-list");
+      }, 1500);
     } catch (err) {
       console.error(err);
-      setMessage({ type: "error", text: err.message || "Failed to add room" });
+      setMessage({ type: "error", text: err.message || "Failed to update room" });
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-800"></div>
+      </div>
+    );
+  }
+
+  if (!roomId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Invalid Room ID</h2>
+          <button
+            onClick={() => router.push("/admin/rooms")}
+            className="mt-4 px-6 py-2 bg-red-800 text-white rounded-lg hover:bg-red-700"
+          >
+            Back to Rooms
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const displayedImage = imagePreview || currentImage;
 
   return (
     <main className="p-6 flex flex-col items-center">
       {/* Header */}
       <div className="w-full mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Add New Room</h1>
-        <p className="text-gray-600 text-sm">
-          Create a new room or facility for booking
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900">Edit Room</h1>
+        <p className="text-gray-600 text-sm">Update room information and details</p>
       </div>
 
-      {/* Success/Error Message */}
+      {/* Message */}
       {message && (
         <div
           className={`max-w-4xl w-full mb-4 p-4 rounded-lg ${
@@ -106,14 +196,14 @@ export default function AddRoom() {
       )}
 
       {/* Card */}
-      <div className="max-w-4xl w-full bg-white rounded-xl shadow-md p-6 mt-15">
+      <div className="max-w-4xl w-full bg-white rounded-xl shadow-md p-6">
         <div className="grid grid-cols-2 gap-6">
           {/* Left: Image Upload */}
           <div className="flex flex-col items-center mt-6">
             <div className="w-48 h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center mb-3">
-              {imagePreview ? (
+              {displayedImage ? (
                 <Image
-                  src={imagePreview}
+                  src={displayedImage}
                   alt="Room preview"
                   width={192}
                   height={192}
@@ -134,9 +224,7 @@ export default function AddRoom() {
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <p className="mt-2 text-xs text-gray-500">
-                    No image uploaded
-                  </p>
+                  <p className="mt-2 text-xs text-gray-500">No image uploaded</p>
                 </div>
               )}
             </div>
@@ -145,7 +233,7 @@ export default function AddRoom() {
               htmlFor="room-image"
               className="px-3 py-1.5 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer transition text-sm"
             >
-              Upload Image
+              {currentImage ? "Change Image" : "Upload Image"}
             </label>
             <input
               id="room-image"
@@ -154,6 +242,19 @@ export default function AddRoom() {
               onChange={handleImageChange}
               className="hidden"
             />
+
+            {newImageFile && (
+              <button
+                onClick={() => {
+                  setNewImageFile(null);
+                  setImagePreview(null);
+                }}
+                className="mt-3 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm"
+              >
+                Cancel Change
+              </button>
+            )}
+
             <p className="text-xs text-gray-500 mt-2 text-center leading-tight">
               JPG, PNG, or GIF (max 5MB)
               <br />
@@ -165,15 +266,15 @@ export default function AddRoom() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Room Name */}
             <div>
-              <label
-                htmlFor="roomName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Room Name
               </label>
               <input
                 type="text"
-                id="roomName"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
                 placeholder="e.g., Conference Room A"
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
                 required
@@ -183,14 +284,14 @@ export default function AddRoom() {
             {/* Location & Capacity */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label
-                  htmlFor="location"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
                   Location
                 </label>
                 <select
                   id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
                   required
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
                 >
@@ -215,18 +316,17 @@ export default function AddRoom() {
               </div>
 
               <div>
-                <label
-                  htmlFor="capacity"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700 mb-1">
                   Capacity
                 </label>
                 <input
                   type="number"
                   id="capacity"
+                  name="capacity"
+                  value={formData.capacity}
+                  onChange={handleInputChange}
                   min="1"
                   max="200"
-                  placeholder=""
                   className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
                   required
                 />
@@ -235,21 +335,15 @@ export default function AddRoom() {
 
             {/* Room Type */}
             <div>
-              <label
-                htmlFor="roomType"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
                 Room Type
               </label>
               <select
-                id="roomType"
+                id="type"
+                name="type"
+                value={formData.type}
+                onChange={handleTypeChange}
                 required
-                value={roomType}
-                onChange={(e) => {
-                  const newType = e.target.value;
-                  setRoomType(newType);
-                  setAmenities(AMENITIES[newType] || []);
-                }}
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="">Select type</option>
@@ -274,9 +368,7 @@ export default function AddRoom() {
 
             {amenities.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amenities
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Amenities</label>
                 <ul className="list-disc pl-5 text-sm text-gray-700">
                   {amenities.map((item, idx) => (
                     <li key={idx}>{item}</li>
@@ -287,14 +379,14 @@ export default function AddRoom() {
 
             {/* Description */}
             <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                 Description (Optional)
               </label>
               <textarea
                 id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
                 placeholder="Add room details..."
                 className="w-full px-3 py-5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 resize-none text-sm"
               ></textarea>
@@ -304,17 +396,17 @@ export default function AddRoom() {
             <div className="flex justify-end gap-2 pt-2 border-gray-200 mt-3">
               <button
                 type="button"
+                onClick={() => router.push("/admin/rooms")}
                 className="px-4 py-1.5 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm"
-                onClick={() => window.history.back()}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="px-4 py-1.5 bg-red-800 text-white rounded-md hover:bg-red-700 text-sm shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSaving}
+                className="px-4 py-1.5 bg-red-800 text-white rounded-md hover:bg-red-700 text-sm shadow-sm disabled:opacity-50"
               >
-                {isSubmitting ? "Adding..." : "Add Room"}
+                {isSaving ? "Saving..." : "Update Room"}
               </button>
             </div>
           </form>

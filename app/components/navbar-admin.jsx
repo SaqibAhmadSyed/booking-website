@@ -79,11 +79,10 @@ export default function Navbar() {
       <aside className="fixed top-0 left-0 h-screen w-45 bg-white flex flex-col z-50">
         <div className="flex items-center justify-center h-16 border-b border-gray-100">
           <Image
-            src="/UniversityLogo.png"
+            src="/img/UniversityLogo.png"
             alt="logo"
             width={170}
             height={200}
-            priority
           />
         </div>
 
@@ -91,6 +90,7 @@ export default function Navbar() {
           <ul className="space-y-3">
             {[
               { name: "Dashboard", path: "/admin" },
+              { name: "Room List", path: "/admin/room-list" },
               { name: "Manage Bookings", path: "/admin/bookings" },
               { name: "Add New Room", path: "/admin/add-room" },
               { name: "Reports/Statistics", path: "/admin/reports" },

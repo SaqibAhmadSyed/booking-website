@@ -3,7 +3,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Toast from "../components/toast";
 
 /**
  * Signup page component - User registration form
@@ -18,11 +17,6 @@ export default function Signup() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // Toast state
-  const [toastVisible, setToastVisible] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("success");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,22 +55,11 @@ export default function Signup() {
 
       // Success - show toast then redirect to login
       setLoading(false);
-      setToastMessage("Account created successfully! Please sign in.");
-      setToastType("success");
-      setToastVisible(true);
       router.push("/");
-      // Close toast and redirect after a short delay
-      setTimeout(() => {
-        setToastVisible(false);
-      }, 1800);
     } catch (err) {
       console.error("Signup error:", err);
       setError("Failed to create account. Please try again.");
       setLoading(false);
-      // show error toast as well
-      setToastMessage("Failed to create account. Please try again.");
-      setToastType("error");
-      setToastVisible(true);
     }
   };
 
@@ -219,15 +202,6 @@ export default function Signup() {
           </p>
         </div>
       </div>
-
-      {/* Toast */}
-      <Toast
-        visible={toastVisible}
-        message={toastMessage}
-        type={toastType}
-        duration={1800}
-        onClose={() => setToastVisible(false)}
-      />
     </main>
   );
 }
