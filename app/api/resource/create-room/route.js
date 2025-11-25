@@ -17,6 +17,7 @@ function buildSchedule() {
         schedule[label] = "available";// A room is available by default
     return schedule;
 }
+
 //Manages the schedule data
 export async function GET(request, { params }) {
     try {
