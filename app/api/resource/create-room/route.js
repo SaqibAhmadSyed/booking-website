@@ -7,6 +7,91 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+//Default daily schedule from 8:00–20:00
+function buildSchedule() {
+    const schedule = {};
+}
+    for (let hour = 8; hour < 20; hour++) {
+        const h = hour.toString().padStart(2, "0");
+        const label = `${h}:00`;
+        schedule[label] = "available";// A room is available by default
+    return schedule;
+}
+//Manages the schedule data
+export async function GET(request, { params }) {
+    try {
+        const { id } = params;
+        const { searchParams } = new URL(request.url);
+        const date = searchParams.get("date");
+        const currentUserId = searchParams.get("userId");
+
+        if (!id || !date) {
+            return NextResponse.json(
+                { error: "room id and date are required" },
+                { status: 400 }
+            );
+        }
+        const schedule = buildSchedule();
+
+        // Load hourly blocks
+        const blocks = await db.roomBlock.findMany({
+            where: {
+                roomId: id, date,
+            },
+        });
+
+        const bookings = await db.booking.findMany({
+            where: {
+                roomId: id, date,
+            },
+        });
+
+        // mark blocked slots
+        for (const block of blocks) {
+            // assume block.startTime / endTime are like "08:00", "12:00"
+            const startHour = parseInt(block.startTime.split(":")[0], 10);
+            const endHour = parseInt(block.endTime.split(":")[0], 10);
+
+            for (let hour = startHour; hour < endHour && hour < 20; hour++) {
+                if (hour >= 8) {
+                    const slot = `${hour.toString().padStart(2, "0")}:00`;
+                    schedule[slot] = "blocked";
+                }
+            }
+        }
+        // mark reserved / yourbooking depending on if user has booked the room
+        for (const booking of bookings) {
+            const startHour = parseInt(booking.startTime.split(":")[0], 10);
+            const endHour = parseInt(booking.endTime.split(":")[0], 10);
+
+            for (let hour = startHour; hour < endHour && hour < 20; hour++) {
+                if (hour >= 8) {
+                    const slot = `${hour.toString().padStart(2, "0")}:00`;
+                    if (schedule[slot] === "blocked") continue;
+                    if (currentUserId && booking.userId === currentUserId) {
+                        schedule[slot] = "yourbooking";
+                    } else {
+                        schedule[slot] = "reserved";
+                    }
+                }
+            }
+        }
+
+        return NextResponse.json(
+            { success: true, schedule },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("Error building schedule:", error);
+        return NextResponse.json(
+            { error: "Failed to build room schedule", details: error.message },
+            { status: 500 }
+        );
+    }
+}
+
+
+//Creates a room
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -47,7 +132,7 @@ export async function POST(request) {
         .from("rooms")
         .getPublicUrl(filePath);
 
-      imageUrl = urlData.publicUrl; // ✅ assign to imageUrl
+      imageUrl = urlData.publicUrl; // Assign to imageUrl
     }
 
     // Save to database using Prisma
@@ -59,7 +144,8 @@ export async function POST(request) {
         type,
         amenities,
         description: description || "no description",
-        image: imageUrl, 
+        image: imageUrl,
+          schedule: buildSchedule(),
       },
     });
 

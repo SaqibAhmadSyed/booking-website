@@ -138,7 +138,7 @@ const handleSaveChanges = async () => {
 
     // Only include imageUrl if a new image was uploaded
     const updatePayload = {
-      firstName: formData.firstName.trim(), // ✅ Trim whitespace
+      firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
       email: formData.email.trim(),
     };
