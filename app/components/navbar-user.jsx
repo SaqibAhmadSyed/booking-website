@@ -23,7 +23,7 @@ export default function Navbar() {
         <div className="flex items-center font-bold text-2xl">
           <div className="">
             <Image
-              src="/UniversityLogo.png"
+              src="/img/UniversityLogo.png"
               alt="logo"
               width={170}
               height={200}
