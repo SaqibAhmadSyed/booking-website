@@ -53,7 +53,7 @@ export default function Signup() {
         return;
       }
 
-      // Success - show toast then redirect to login
+      // Success --> redirect to login
       setLoading(false);
       router.push("/");
     } catch (err) {
