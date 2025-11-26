@@ -14,7 +14,7 @@ import ViewModal from "../../components/view-modal";
  * - Color-coded availability legend
  */
 export default function RoomList() {
-  const [selectedDate, setSelectedDate] = useState("Tuesday, October 14th, 2025");
+  const [selectedDate, setSelectedDate] = useState(new Date(2025,10,14))
   const [facilityType, setFacilityType] = useState("labs");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -37,8 +37,40 @@ export default function RoomList() {
 
   const timeSlots = ["8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
 
-  const handlePreviousDate = () => console.log("Previous date");
-  const handleNextDate = () => console.log("Next date");
+
+    // Color of each of the room's statuses
+    const STATUS_LABELS = {
+        available: "Available",
+        reserved: "Reserved (someone else)",
+        yourbooking: "Your booking",
+        blocked: "Blocked / Unavailable",
+    };
+
+    const STATUS_CLASSES = {
+        available: "bg-green-100 border-green-300",
+        reserved: "bg-yellow-100 border-yellow-300",
+        yourbooking: "bg-blue-200 border-blue-400",
+        blocked: "bg-red-100 border-red-300",
+    };
+
+    const getStatusClass = (status) =>
+        STATUS_CLASSES[status] || "bg-gray-100 border-gray-300";
+
+    const handlePreviousDate = () => {
+        setSelectedDate((prev) => {
+            const d = new Date(prev);
+            d.setDate(d.getDate() - 1);
+            return d;
+        });
+    };
+
+    const handleNextDate = () => {
+        setSelectedDate((prev) => {
+            const d = new Date(prev);
+            d.setDate(d.getDate() + 1);
+            return d;
+        });
+    };
   
   const handleRoomClick = (room) => {
     // Transform room data to match ViewModal expectations
@@ -126,11 +158,7 @@ export default function RoomList() {
                   {room.schedule.map((status, index) => (
                     <div
                       key={index}
-                      className={`flex-1 min-w-[70px] border-l border-gray-200 cursor-pointer transition ${
-                        status === "available" ? "bg-green-100"
-                        : status === "unavailable" ? "bg-red-100"
-                        : "bg-blue-200"
-                      }`}
+                      className={`flex-1 min-w-[70px] border-l cursor-pointer transition border-gray-200 ${getStatusClass(status)}`}
                       onClick={() => {
                           if (status === "available") {
                               window.location.href = `/user/reservation?roomId=${room.id}&time=${timeSlots[index]}`;
@@ -147,11 +175,16 @@ export default function RoomList() {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap gap- justify-center">
-        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-green-100 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Available</span></div>
-        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-red-100 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Unavailable</span></div>
-        <div className="flex items-center gap-2"><div className="w-8 h-8 bg-blue-200 border border-gray-300 rounded"></div><span className="text-sm text-gray-700">Your Booking</span></div>
-      </div>
+        <div className="mt-6 flex flex-wrap gap-4 justify-center">
+            {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                <div key={key} className="flex items-center gap-2">
+                    <div
+                        className={`w-8 h-8 rounded border ${getStatusClass(key)}`}
+                    ></div>
+                    <span className="text-sm text-gray-700">{label}</span>
+                </div>
+            ))}
+        </div>
 
       {/* ViewModal */}
       {isModalOpen && (
@@ -165,4 +198,5 @@ export default function RoomList() {
       )}
     </main>
   );
+
 }
