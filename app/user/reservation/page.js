@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Calendar from "../../components/calendar";
 import Toast from "../../components/toast";
+import {useSearchParams} from "next/navigation";
+
 
 /**
  * Reservation page - Create new room bookings
@@ -13,6 +15,7 @@ import Toast from "../../components/toast";
  * - Two-column layout with calendar and form
  */
 export default function Reservation() {
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -23,6 +26,9 @@ export default function Reservation() {
     endTime: "",
     purpose: "",
   });
+    const searchParams = useSearchParams();
+    const selectedRoomId = searchParams.get("roomId");
+    const selectedTime = searchParams.get("time");
 
   const [toast, setToast] = useState({
     visible: false,
@@ -35,20 +41,49 @@ export default function Reservation() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Reservation created:", { ...formData, date: selectedDate });
-    setToast({
-      visible: true,
-      message: `Reservation confirmed for ${formData.name || "N/A"} (ID: ${
-        formData.studentId || "N/A"
-      }) on ${selectedDate || "N/A"}`,
-      type: "success",
-    });
-  };
+    useEffect(() => {
+        if (selectedTime) {
+            setFormData((prev) => ({ ...prev, startTime: selectedTime }));
+        }
+    }, [selectedTime]);
 
-  return (
-    <main>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!selectedDate) {
+            return setToast({
+                visible: true,
+                message: "Please select a date first.",
+                type: "error",
+            });
+        }
+
+        try {
+            const response = await fetch("/api/booking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    resourceId: selectedRoomId || "TEMP_RESOURCE_ID",
+                    date: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
+                    startTime: formData.startTime,
+                    endTime: formData.endTime,
+                    purpose: formData.purpose,
+                }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Failed to create reservation");
+
+            setToast({ visible: true, message: "Reservation successful!", type: "success" });
+
+        } catch (err) {
+            setToast({ visible: true, message: err.message, type: "error" });
+        }
+    };
+
+
+    return (
+    <main className="pb-32">
       <div className="p-6 overflow-auto mb-2">
         <h1 className="text-3xl font-bold text-gray-900">Set a Reservation</h1>
         <p className="text-gray-600 mt-1">Create a new reservation</p>

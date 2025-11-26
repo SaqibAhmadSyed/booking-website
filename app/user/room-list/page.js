@@ -131,7 +131,12 @@ export default function RoomList() {
                         : status === "unavailable" ? "bg-red-100"
                         : "bg-blue-200"
                       }`}
-                      onClick={() => { if (status === "available") console.log(`Book ${room.name} at ${timeSlots[index]}`); }}
+                      onClick={() => {
+                          if (status === "available") {
+                              window.location.href = `/user/reservation?roomId=${room.id}&time=${timeSlots[index]}`;
+                          }
+                      }}
+
                     ></div>
                   ))}
                 </div>
