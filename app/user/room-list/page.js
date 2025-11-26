@@ -14,18 +14,18 @@ import ViewModal from "../../components/view-modal";
  * - Color-coded availability legend
  */
 export default function RoomList() {
-  const [selectedDate, setSelectedDate] = useState(new Date(2025,10,14))
+  const [selectedDate, setSelectedDate] = useState(new Date(2025,9,14))
   const [facilityType, setFacilityType] = useState("labs");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const baseRooms = [
-    { id: 1, type: "labs", name: "Lab10", image: "/img/Lab10.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["unavailable","unavailable","unavailable","unavailable","unavailable","available","available","available","available","available","unavailable","unavailable","unavailable"] },
-    { id: 2, type: "labs", name: "Lab11", image: "/img/Lab11.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["available","available","available","available","available","available","available","unavailable","unavailable","unavailable","available","available","available"] },
-    { id: 3, type: "studyrooms", name: "Study Room A", image: "/img/room101.jpg", capacity: 4, location: "SGW Library", schedule: ["available","available","booked","available","available","available","unavailable","available","available","available","available","available","available"] },
-    { id: 4, type: "studyrooms", name: "Study Room B", image: "/img/room102.png", capacity: 6, location: "Loyola Library", schedule: ["available","unavailable","available","available","available","available","available","available","booked","available","available","available","available"] },
-    { id: 5, type: "sports", name: "Basketball Court", image: "/img/BBCourt.jpg", capacity: 12, location: "Sports Complex", schedule: ["available","available","available","available","booked","booked","available","available","available","available","available","available","available"] },
-    { id: 6, type: "sports", name: "Tennis Court", image: "/img/TennisSet.jpg", capacity: 4, location: "Sports Complex", schedule: ["unavailable","available","available","available","available","available","available","booked","available","available","available","available","available"] }
+    { id: 1, type: "labs", name: "Lab10", image: "/img/Lab10.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["reserved","reserved","reserved","reserved","reserved","available","available","available","available","available","reserved","reserved","reserved"] },
+    { id: 2, type: "labs", name: "Lab11", image: "/img/Lab11.jpg", capacity: 8, location: "Rutherford Science Hub", schedule: ["available","available","available","available","available","available","available","reserved","reserved","reserved","available","available","available"] },
+    { id: 3, type: "studyrooms", name: "Study Room A", image: "/img/room101.jpg", capacity: 4, location: "SGW Library", schedule: ["available","available","yourbooking","available","available","available","reserved","available","available","available","available","available","available"] },
+    { id: 4, type: "studyrooms", name: "Study Room B", image: "/img/room102.png", capacity: 6, location: "Loyola Library", schedule: ["available","reserved","available","available","available","available","available","available","yourbooking","available","available","available","available"] },
+    { id: 5, type: "sports", name: "Basketball Court", image: "/img/BBCourt.jpg", capacity: 12, location: "Sports Complex", schedule: ["available","available","available","available","yourbooking","yourbooking","available","available","available","available","available","available","available"] },
+    { id: 6, type: "sports", name: "Tennis Court", image: "/img/TennisSet.jpg", capacity: 4, location: "Sports Complex", schedule: ["reserved","available","available","available","available","available","available","yourbooking","available","blocked","blocked","blocked","blocked"] }
   ];
 
   // Duplicate data for demos/extras (We will change those later)
@@ -41,9 +41,9 @@ export default function RoomList() {
     // Color of each of the room's statuses
     const STATUS_LABELS = {
         available: "Available",
-        reserved: "Reserved (someone else)",
+        reserved: "Reserved (someone else's booking)",
         yourbooking: "Your booking",
-        blocked: "Blocked / Unavailable",
+        blocked: "Blocked / reserved",
     };
 
     const STATUS_CLASSES = {
