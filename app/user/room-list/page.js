@@ -126,8 +126,8 @@ export default function RoomList() {
       {/* Date Selector */}
       <div className="flex items-center justify-center gap-4 mb-8 bg-white rounded-lg shadow p-4">
         <button onClick={handlePreviousDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&lt;</button>
-
-          <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">{formatSelectedDate(selectedDate)}</p>
+          <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">
+              {formatSelectedDate(selectedDate)}</p>
         <button onClick={handleNextDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&gt;</button>
       </div>
 
