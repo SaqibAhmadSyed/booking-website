@@ -14,11 +14,14 @@
 - View facility schedules (labs, study rooms, sports areas, etc.) on separate pages.  
 - See the status of each facility depending on the selected hour/date.  
 - View an overall schedule or calendar showing which facilities are booked or available.
+- Student ability to manage their own bookings (edit time/room)
 
-#### 3. Booking Management *(Upcoming Feature)*
-- Book available rooms during open time slots.  
+#### 3. Booking Management
+- Student ability to book rooms during available spaces.  
 - Edit or cancel existing bookings.  
 - Handle booking conflicts automatically to prevent overlapping reservations.
+- Server-side database to store all rooms, users, and bookings.
+- Booking conflict handling.  
 
 ---
 
@@ -37,17 +40,11 @@
 #### 3. Analytics & Statistics
 - View statistics on facility usage (e.g., number of bookings per day).
 
-#### 4. Facility Editing *(Upcoming Feature)*
+#### 4. Facility Editing 
 - Edit existing facility information (name, schedule, capacity, etc.).
+- Administrator ability to edit rooms. 
 
----
-
-### Upcoming Features Summary
-- Administrator ability to edit rooms.  
-- Student ability to manage their own bookings (edit time/room).  
-- Student ability to book rooms during available spaces.  
-- Booking conflict handling.  
-- Server-side database to store all rooms, users, and bookings.
+ 
 
 ## How to run the project
 
