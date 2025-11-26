@@ -56,6 +56,14 @@ export default function RoomList() {
     const getStatusClass = (status) =>
         STATUS_CLASSES[status] || "bg-gray-100 border-gray-300";
 
+    const formatSelectedDate = (date) =>
+        date.toLocaleDateString("en-CA", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+
     const handlePreviousDate = () => {
         setSelectedDate((prev) => {
             const d = new Date(prev);
@@ -118,7 +126,8 @@ export default function RoomList() {
       {/* Date Selector */}
       <div className="flex items-center justify-center gap-4 mb-8 bg-white rounded-lg shadow p-4">
         <button onClick={handlePreviousDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&lt;</button>
-        <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">{selectedDate}</p>
+
+          <p className="text-lg font-semibold text-gray-900 min-w-[280px] text-center">{formatSelectedDate(selectedDate)}</p>
         <button onClick={handleNextDate} className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">&gt;</button>
       </div>
 
